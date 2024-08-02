@@ -26,7 +26,7 @@ To clone the project, you will need:
 
 First clone the project using git
 ```
-git clone https://url
+git clone https://github.com/CuzImAzizx/Masrofi.git
 ```
 Then, navigate into the cloned project
 ```
