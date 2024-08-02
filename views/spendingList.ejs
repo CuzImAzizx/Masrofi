@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تاريخ العمليّات</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" type="image/x-icon" href="icon.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@200;300;400;500;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+  <style>
+    .modal {
+      display: none;
+      /* Hidden by default */
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.7);
+      /* Black background with transparency */
+    }
+
+    .modal-content {
+      background-color: #fefefe;
+      margin: 15% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+    }
+
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+      color: black;
+      text-decoration: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="card">
+    <div class="card-body" style="text-align: center;">
+      <h2 class="tajawal-bold">تاريخ العمليّات</h2>
+      <p class="tajawal-bold">تحت بتلاقي قائمة بكل العمليات الي تسجلت في قاعدة البيانات</p>
+      <div class="form-group">
+        <a href="/viewData" class="tajawal-regular"><button class="btn btn-outline-primary">أعرض لي كل العمليات</button></a>
+        <a href="/viewDataCurrentMonth" class="tajawal-regular"><button class="btn btn-outline-primary">أعرض لي عمليات الشهر هذا بس</button></a>
+      </div>
+      <div class="form-group">
+        <p>
+          <button class="btn btn-outline-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+            <span class="tajawal-regular">عرض فترة محددة</span>
+          </button>
+        </p>
+        <div class="collapse" id="collapseExample">
+          <div class="card card-body">
+            <form action="viewDataSpecificRange" method="get">
+              <div class="form-group">
+                <input type="date" name="startDate" required>
+                <label for="startDate" class="tajawal-light">:من تاريخ</label>
+              </div>
+              <div class="form-group">
+                <input type="date" name="endDate" required>
+                <label for="startDate" class="tajawal-light">:الى تاريخ</label>
+              </div>
+              <button type="submit" class="btn btn-outline-primary">أدخل</button>
+            </form>
+          </div>
+        </div>
+
+      </div>
+      <div class="form-group">
+        <a href="/" class="tajawal-regular"><button class="btn btn-outline-secondary" style="width: 100%;">العودة</button></a>
+      </div>
+    </div>
+    <hr>
+    <div class="card-body" style="text-align: center;">
+        <div class="container">
+          <div class="card-header"><span class="tajawal-bold">ملخص لـ<%= viewMode %></span></div>
+          <div class="row">
+            <div class="col">
+              <% 
+              let totalAmount = 0
+              for (let i = 0; i < transactions.length; i++) {
+                  totalAmount += transactions[i].Amount;
+              }
+              totalAmount = Math.round(totalAmount);
+              let TransactionsCount = transactions.length;
+              let totalIncome = 0;
+              for(let i = 0; i < transactions.length; i++){
+                if(transactions[i].Amount > 0){
+                  totalIncome += transactions[i].Amount
+                }
+              }
+              totalIncome = Math.round(totalIncome);
+              let totalSpend = 0;
+              for(let i = 0; i < transactions.length; i++){
+                if(transactions[i].Amount < 0){
+                  totalSpend += transactions[i].Amount
+                }
+              }
+              totalSpend = Math.round(totalSpend);
+              %>
+              <p class="tajawal-bold">عدد العمليّات</p>
+              <p class="tajawal-regular"><span style="opacity: 0%;">ا</span><%= TransactionsCount %><span>عمليّة</span></p>
+            </div>
+            <div class="col">
+              <p class="tajawal-bold">اجمالي المبلغ</p>
+              <% if (totalAmount > 0) { %>
+                  <span class="badge badge-success" style="font-size: medium;"><%= totalAmount %> ﷼</span>
+              <% } else { %>
+                  <span class="badge badge-danger" style="font-size: medium;"><%= totalAmount %> ﷼</span>
+              <% } %>
+
+                
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col">
+              <p class="tajawal-bold"><i class="fa-solid fa-angle-up"></i>الصادر</p>
+              <span class="badge badge-danger" style="font-size: medium;"><%= totalSpend %> ﷼</span>
+            </div>
+            <div class="col">
+              <p class="tajawal-bold"><i class="fa-solid fa-angle-down"></i>الوارد</p>
+              <span class="badge badge-success" style="font-size: medium;"><%= totalIncome %> ﷼</span>
+            </div>
+          </div>
+        </div>
+        
+    </div>
+
+    <hr>
+    <div class="card-header"><h2 class="tajawal-bold" style="text-align: center;"><%= viewMode %></h2></div>
+    <table class="table" role="table">
+      <thead style="text-align: right;">
+        <tr class="tajawal-bold">
+          <th scope="col">رقم</th>
+          <th scope="col">المبلغ</th>
+          <th scope="col">التاريخ</th>
+          <th scope="col">ملاحظات</th>
+          <th scope="col">تفاصيل</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% transactions.forEach((transaction, index) => { %>
+        <tr class="tajawal-bold" style="text-align: right;">
+          <th>رقم: <%= index + 1 %></th>
+          <% if (transaction.Amount > 0) { %>
+          <th><span class="badge badge-success" style="font-size: medium;"><%= transaction.Amount %> ﷼</span> :مبلغ</th>
+          <% } else { %>
+          <th><span class="badge badge-danger" style="font-size: medium;"><%= transaction.Amount %> ﷼</span> :مبلغ</th>
+          <% } %>
+          <th><%= transaction.Date %> :تاريخ</th>
+          <th>ملاحظات: <%= transaction.Note %> </th>
+          <th>
+            <button type="button" class="btn btn-outline-primary" data-index="<%= index %>">تفاصيل اكثر</button>
+          </th>
+        </tr>
+        <div class="modal" id="transactionModal<%= index %>" style="text-align: right;">
+          <div class="modal-content">
+            <div class="tajawal-regular">
+              <span class="close" data-index="<%= index %>">&times;</span>
+              <br>
+              <h2>عملية رقم <%= index + 1 %></h2>
+              <hr>
+              <p class="tajawal-bold"><%= transaction.Name %> :أسم المتجر</p>              
+              <% if (transaction.Amount > 0) { %>
+              <p><span class="badge badge-success" style="font-size: medium;"><%= transaction.Amount %> ﷼</span> :مبلغ</p>
+              <% } else { %>
+              <p><span class="badge badge-danger" style="font-size: medium;"><%= transaction.Amount %> ﷼</span> :مبلغ</p>
+              <% } %>
+              <p class="tajawal-bold"><%= transaction.Date %> :تاريخ</p>
+              <p class="tajawal-bold">ملاحظات: <%= transaction.Note %></p>
+              <p class="tajawal-bold">:الرسالة المُدخلة</p>
+              <p><%= transaction.ActaulMessage %></p>
+              <p class="tajawal-bold">:صورة الفاتورة</p>
+              <img style="width: 250px;" src="<%= transaction.ImagePath %>" alt="">
+              <br>
+              <hr>
+              <p>في شيء خطأ؟ احذها وحطها مرة ثانية</p>
+              <a href="/deleteTransaction/<%= encodeURIComponent(transaction.ActaulMessage) %>"><button type="button" class="btn btn-outline-danger">حذف</button></a>
+            </div>
+          </div>
+        </div>
+        <% }) %>
+      </tbody>
+    </table>
+    <a href="/" class="tajawal-regular"><button class="btn btn-outline-secondary" style="width: 100%;">العودة</button></a>
+
+  </div>
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Show the modal when the "تفاصيل اكثر" button is clicked
+      document.querySelectorAll('button[data-index]').forEach(button => {
+        button.addEventListener('click', function() {
+          const index = this.getAttribute('data-index');
+          document.getElementById(`transactionModal${index}`).style.display = 'block';
+        });
+      });
+
+      // Close the modal when the close button is clicked
+      document.querySelectorAll('.close').forEach(closeButton => {
+        closeButton.addEventListener('click', function() {
+          const index = this.getAttribute('data-index');
+          document.getElementById(`transactionModal${index}`).style.display = 'none';
+        });
+      });
+
+      // Close the modal if clicked outside of the modal content
+      window.addEventListener('click', function(event) {
+        if (event.target.classList.contains('modal')) {
+          event.target.style.display = 'none';
+        }
+      });
+    });
+  </script>
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  
+</body>
+
+</html>

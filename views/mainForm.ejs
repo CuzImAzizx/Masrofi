@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تتبع المصروفات</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" type="image/x-icon" href="icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@200;300;400;500;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+</head>
+
+<body>
+
+
+  <div class="contrainer">
+    <% if (typeof err !== 'undefined' && err) { %>
+    <div class="alert alert-danger" role="alert">
+      <span class="tajawal-regular"><%= err.message %></span>
+    </div>
+    <% } %>
+
+    <% if (typeof succ !== 'undefined' && succ) { %>
+    <div class="alert alert-success" role="alert">
+      <span class="tajawal-regular"><%= succ.message %></span>
+    </div>
+    <% } %>
+
+    <div class="card">
+      <div class="card-body" style="text-align: center;">
+        <h2 class="tajawal-bold">Masrofi مصروفي</h1>
+          <h4 class="tajawal-regular">دخّل رسالة عملية الشراء تحت عشان نحطها في قاعدة البيانات</h3>
+            <form action="/postSMS" method="post" enctype="multipart/form-data">
+              <div class="form-group">
+                <label for="note" class="tajawal-light">رسالة عملية الشراء من البنك</label>
+                <textarea class="form-control" name="smsContent" rows="3" required ></textarea>
+              </div>
+              <div class="mb-3">
+                <label for="formFile" class="tajawal-light">صورة للفاتورة (اختياري)</label>
+                <input class="form-control" type="file" id="formFile" name="image" accept="image/*">
+              </div>
+              <div class="form-group">
+                <label for="note" class="tajawal-light">ملاحظات (اختياري)</label>
+                <input type="text" class="form-control"  name="note">
+              </div>
+              <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;"><span class="tajawal-regular">أرسل البيانات</span></button>
+            </form>
+            <small class="tajawal-light">✨مدعّم بالذكاء الاصطناعي</small>
+      </div>
+    </div>
+    <div class="card" style="text-align: center;">
+      <div class="card-body" style="text-align: center;">
+        <h4 class="tajawal-bold">معلومات سريعة</h4>
+        <br>
+        <h5 class="tajawal-regular">مجموع الحساب💳: <span><%= insight.totalAmount %> ﷼</span></p>
+          <% if (insight.totalAmount >= 1 && insight.totalAmount <= parseFloat(process.env.ALERT_LIMIT)) { %>
+          <div class="alert alert-warning" role="alert">
+            تحذير! تراك حوالي تكون مديون. باقي لك بس <%= insight.totalAmount %>
+          </div>
+          <% } %>
+          <% if (insight.totalAmount < 0) { %>
+          <div class="alert alert-danger" role="alert">
+            تحذير! تراك صرت مديون بـ <%= insight.totalAmount %>
+          </div>
+          <% } %>
+
+
+          <br>
+          <h5 class="tajawal-regular">مجموع صرفيات الشهر الحالي💸: <span><%= insight.spendingThisMonth %> ﷼</span></p>
+            <% if (insight.spendingThisMonth >= -(parseFloat(process.env.MONTHLY_BUDGET) - 1) && insight.spendingThisMonth <= -parseFloat(process.env.ALERT_LIMIT)) { %>
+            <div class="alert alert-warning" role="alert">
+              تحذير! تراك حول الحد الشهري. باقي لك بس <%= parseFloat(process.env.MONTHLY_BUDGET) + insight.spendingThisMonth %>
+            </div>
+            <% } %>
+            <% if (insight.spendingThisMonth < -parseFloat(process.env.MONTHLY_BUDGET)) { %>
+            <div class="alert alert-danger" role="alert">
+              تحذير! تراك تعديت الحد الشهري بــ <%= parseFloat(process.env.MONTHLY_BUDGET) + insight.spendingThisMonth %>
+            </div>
+            <% } %>
+            <a href="/viewData"><button type="submit" class="btn btn-secondary" style="width: 100%;"><span class="tajawal-light">أطلع أكثر على كل البيانات</span></button>
+            </a>
+            <div class="form-group">
+                <br>
+                <a href="/settings" class="tajawal-regular"><button class="btn btn-outline-secondary">الاعدادات</button></a>
+                <a href="/logout" class="tajawal-regular"><button class="btn btn-outline-danger">تسجيل الخروج</button></a>
+              </div>
+        
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+
+</html>
