@@ -35,6 +35,7 @@
 
                     <textarea class="form-control" id="exampleFormControlTextarea1" rows="4" required
                         name="smsMessage">{{old('smsMessage')}}</textarea>
+                        <small class="tajawal-light">✨مدعّم بالذكاء الاصطناعي</small>
                 </div>
             @endif
             
