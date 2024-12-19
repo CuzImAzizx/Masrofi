@@ -7,7 +7,7 @@ use App\Models\Plan;
 use App\Models\Subscription;
 use App\Models\Transaction;
 use Carbon\Carbon;
-use Gemini\Laravel\Facades\Gemini;
+use Gemini;
 use Illuminate\Http\Request;
 use stdClass;
 
@@ -58,6 +58,7 @@ class UserController extends Controller
         $userSubscription->save();
 
         //Pass it to the AI
+        //TODO: Enhance the prompt
         $initPrompt = "You are part of a program designed to extract and return a JSON object from a transaction SMS message. This object must contain the following fields:
         - **name**: string
         - **amount**: float (negative for outgoing transfers or purchases, positive for incoming transfers)
@@ -65,16 +66,18 @@ class UserController extends Controller
         
         Do not include the ```json``` code formatting. just the JSON object. If the input is not a valid SMS transaction or lacks any of the required fields (name, amount, or date), return the word 'false'. Ignore everything below the '**START OF SMS**' line.";
         $wholePrompt  = "$initPrompt\n**START OF SMS**\n$request->smsMessage\n**END OF SMS**";
-
-        $AIResponseText = Gemini::generativeModel('models/gemini-1.5-flash')->generateContent($wholePrompt);
-        //return $AIResponseText->text();
-        if($AIResponseText->text() == "false\n" or $AIResponseText->text() == "false"){
+        
+        $apiKey = getenv('GEMINI_API_KEY');
+        $client = Gemini::client($apiKey);
+        $AIResponse = $client->generativeModel(model: 'models/gemini-1.5-flash-001')->generateContent($wholePrompt);
+        
+        if($AIResponse->text() == "false\n" or $AIResponse->text() == "false"){
             $worthiness = $this->worthiness();
             return redirect()->back()->withErrors([
                 'smsMessage' => 'على ما يبدو ان هذي ماهي رسالة عمليّة شراء. جرب تدخّلها بشكل يدوي',
             ])->withInput()->with("worthiness", $worthiness);
         }
-        $transaction = json_decode($AIResponseText->text());
+        $transaction = json_decode($AIResponse->text());
 
         return view('confirmationTransaction')
         ->with('transaction', $transaction)

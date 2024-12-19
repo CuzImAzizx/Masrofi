@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2048d40c1ca898952b8fde9d8b671616",
+    "content-hash": "e078a88b925630fefabd9ae111678823",
     "packages": [
         {
             "name": "brick/math",
@@ -579,16 +579,16 @@
         },
         {
             "name": "google-gemini-php/client",
-            "version": "1.0.5",
+            "version": "1.0.14",
             "source": {
                 "type": "git",
                 "url": "https://github.com/google-gemini-php/client.git",
-                "reference": "9002b5d218a63e7692de76728b700600c8e61dca"
+                "reference": "11e7413b231dd2ab7ca6169f780d6cc4eeae41a1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/google-gemini-php/client/zipball/9002b5d218a63e7692de76728b700600c8e61dca",
-                "reference": "9002b5d218a63e7692de76728b700600c8e61dca",
+                "url": "https://api.github.com/repos/google-gemini-php/client/zipball/11e7413b231dd2ab7ca6169f780d6cc4eeae41a1",
+                "reference": "11e7413b231dd2ab7ca6169f780d6cc4eeae41a1",
                 "shasum": ""
             },
             "require": {
@@ -598,7 +598,7 @@
             "require-dev": {
                 "guzzlehttp/guzzle": "^7.8.1",
                 "guzzlehttp/psr7": "^2.6.2",
-                "laravel/pint": "^1.13.10",
+                "laravel/pint": "^1.18.1",
                 "mockery/mockery": "^1.6.7",
                 "pestphp/pest": "^2.30",
                 "phpstan/phpstan": "^1.10"
@@ -636,77 +636,9 @@
             ],
             "support": {
                 "issues": "https://github.com/google-gemini-php/client/issues",
-                "source": "https://github.com/google-gemini-php/client/tree/1.0.5"
+                "source": "https://github.com/google-gemini-php/client/tree/1.0.14"
             },
-            "time": "2024-07-09T11:28:21+00:00"
-        },
-        {
-            "name": "google-gemini-php/laravel",
-            "version": "1.0.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/google-gemini-php/laravel.git",
-                "reference": "ac83a7a3f5c438c1823af0ce939f3d17d61441ae"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/google-gemini-php/laravel/zipball/ac83a7a3f5c438c1823af0ce939f3d17d61441ae",
-                "reference": "ac83a7a3f5c438c1823af0ce939f3d17d61441ae",
-                "shasum": ""
-            },
-            "require": {
-                "google-gemini-php/client": "^1.0",
-                "laravel/framework": "^9.0|^10.0|^11.0",
-                "php": "^8.1.0"
-            },
-            "require-dev": {
-                "guzzlehttp/guzzle": "^7.8.1",
-                "laravel/pint": "^1.13.6",
-                "pestphp/pest": "^2.27.0",
-                "pestphp/pest-plugin-arch": "^2.4.1",
-                "phpstan/phpstan": "^1.10.47",
-                "symfony/var-dumper": "^6.4.0|^7.0.1"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Gemini\\Laravel\\ServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Gemini\\Laravel\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Fatih AYDIN",
-                    "email": "aydinfatih52@gmail.com"
-                }
-            ],
-            "description": "Google Gemini PHP for Laravel is a supercharged PHP API client that allows you to interact with the Google Gemini AI API",
-            "keywords": [
-                "Gemini",
-                "api",
-                "client",
-                "language",
-                "laravel",
-                "natural",
-                "php",
-                "processing",
-                "sdk"
-            ],
-            "support": {
-                "issues": "https://github.com/google-gemini-php/laravel/issues",
-                "source": "https://github.com/google-gemini-php/laravel/tree/1.0.1"
-            },
-            "time": "2024-02-11T17:25:44+00:00"
+            "time": "2024-11-06T17:51:13+00:00"
         },
         {
             "name": "graham-campbell/result-type",
@@ -2450,16 +2382,16 @@
         },
         {
             "name": "php-http/discovery",
-            "version": "1.19.4",
+            "version": "1.20.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-http/discovery.git",
-                "reference": "0700efda8d7526335132360167315fdab3aeb599"
+                "reference": "82fe4c73ef3363caed49ff8dd1539ba06044910d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-http/discovery/zipball/0700efda8d7526335132360167315fdab3aeb599",
-                "reference": "0700efda8d7526335132360167315fdab3aeb599",
+                "url": "https://api.github.com/repos/php-http/discovery/zipball/82fe4c73ef3363caed49ff8dd1539ba06044910d",
+                "reference": "82fe4c73ef3363caed49ff8dd1539ba06044910d",
                 "shasum": ""
             },
             "require": {
@@ -2523,9 +2455,9 @@
             ],
             "support": {
                 "issues": "https://github.com/php-http/discovery/issues",
-                "source": "https://github.com/php-http/discovery/tree/1.19.4"
+                "source": "https://github.com/php-http/discovery/tree/1.20.0"
             },
-            "time": "2024-03-29T13:00:05+00:00"
+            "time": "2024-10-02T11:20:13+00:00"
         },
         {
             "name": "phpoption/phpoption",
