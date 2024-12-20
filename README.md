@@ -7,16 +7,15 @@ If you're reading this, it means the project is in a semi-completed state. While
 
 Masrofi is a personal expense tracking web application built with Laravel. It's the predecessor of [MasrofiSimple](https://github.com/CuzImAzizx/MasrofiSimple).
 
-
-## What have been improved?
-Compared to [MasrofiSimple](https://github.com/CuzImAzizx/MasrofiSimple), Masrofi now is using modren technologies, it's a multi-user robust web application for tracking personal expenses. With the ability to manipulate transactions efficiently.
-
-![alt text](assets/image2.png)
-
-## What is special about Masrofi?
+## What is Special About Masrofi?
 - **Powerd by AI**: Using AI model to analyze SMS transaction messages and extract essential information, such as store names, amounts, and dates for convenient and efficient use.
 - **Advanced Searching/Filtering**: Easily query your transactions by name, filter within specific time periods, and search within designated amount ranges for enhanced financial tracking.
 - **Valuable Insights**: You can view valuable insights of your transactions.
+
+![alt text](assets/image2.png)
+
+## What Have Been Improved?
+Compared to [MasrofiSimple](https://github.com/CuzImAzizx/MasrofiSimple), Masrofi now is using modren technologies, it's a multi-user robust web application for tracking personal expenses. With the ability to manipulate transactions efficiently.
 
 ![alt text](assets/image31.png)
 
