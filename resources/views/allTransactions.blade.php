@@ -391,7 +391,7 @@
                                             <div class="mb-3">
                                                 <p>صورة للفاتورة</p>
                                                 @if ($transaction->image)
-                                                    <img style="width:60vw; max-width:430px" src="{{asset($transaction->image)}}"
+                                                    <img style="width:60vw; max-width:430px" src="{{asset('storage/' . $transaction->image)}}"
                                                         class="rounded mx-auto d-block">
                                                 @else
                                                     <p class="tajawal-extralight">لا توجد صورة</p>

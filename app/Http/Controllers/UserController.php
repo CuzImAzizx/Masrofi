@@ -98,8 +98,8 @@ class UserController extends Controller
 
         //Do something with the image.
         if(!is_null($request->image)){
-            $imagePath = $request->file('image')->store('public/invoices');
-            $imagePath = str_replace('public/', 'storage/', $imagePath);
+            $imagePath = $request->file('image')->store('invoices', 'public');
+            //$imagePath = str_replace('public/', 'storage/', $imagePath);
             //Might change this to use it with S3 bucket
         } else {
             $imagePath = null;
