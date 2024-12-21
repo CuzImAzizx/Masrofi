@@ -368,7 +368,8 @@ class UserController extends Controller
         $user = auth()->user();
         $currentSettings = Config::where("user_id", "=", $user->id)->first();
         $userData = collect($user)->merge(collect($currentSettings));
-        return view('profile')->with('userData', $userData);
+        $updated = session('updated', false);
+        return view('profile')->with('userData', $userData)->with('updated', $updated);
     }
 
     public function updateProfile(Request $request){

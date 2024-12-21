@@ -61,7 +61,7 @@
 
             @elseif ($homePageInsight->leftFromBudget < ($homePageInsight->budget * 0.2))
             <div class="alert alert-warning" role="alert">
-                <h5 class="tajawal-regular">تحذير! تبقى فقط 20% من الميزانيّة</h5>
+            <h5 class="tajawal-regular">تحذير! تبقى فقط {{ number_format(($homePageInsight->leftFromBudget / $homePageInsight->budget) * 100, 2) }}% من الميزانيّة</h5>
             </div>
             @endif
         @else

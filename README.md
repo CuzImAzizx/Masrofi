@@ -26,7 +26,7 @@ You can create an account and start using Masrofi **for free** [here](https://go
 
 ### Self-hosting
 
-If you prefer, you can run and host Masrofi on your own server.
+If you prefer, you can run and host Masrofi on your own server. (Docker version coming soon)
 
 #### Requirements
 Make sure you have the following installed on your machine:
@@ -41,7 +41,7 @@ Make sure you have the following installed on your machine:
 1. **Clone the Project**
 ```bash
 git clone https://github.com/CuzImAzizx/Masrofi
-dc Masrofi
+cd Masrofi
 ```
 
 2. **Install the Dependencies**
