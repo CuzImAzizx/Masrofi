@@ -183,6 +183,7 @@ class UserController extends Controller
                     //Same logic for `$this->viewTransactionsThisMonth();`
                     $transactions = Transaction::where('user_id', '=', $user->id)
                     ->whereBetween('date',[$dates->startDate, $dates->endDate])
+                    ->orderBy('date', 'desc')
                     ->get();
 
                     $insight = $this->getInsight($transactions);
@@ -200,6 +201,7 @@ class UserController extends Controller
                 $startDate = $endDate->copy()->subMonths($request->viewModeMonth);
                 $transactions = Transaction::where('user_id', '=', $user->id)
                 ->whereBetween('date',[$startDate, $endDate])
+                ->orderBy('date', 'desc')
                 ->get();
 
                 $insight = $this->getInsight($transactions);
