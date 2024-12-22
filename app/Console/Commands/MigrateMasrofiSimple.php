@@ -18,14 +18,13 @@ class MigrateMasrofiSimple extends Command
      *
      * @var string
      */
-    protected $signature = 'app:migrate-masrofi-simple {userEmail} {path}';
-
+    protected $signature = 'app:migrate-masrofi-simple {path : The path to the old MasrofiSimple to migrate from} {userEmail : The email of the user to migrate transactions to}';
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Migrates transactions from old MasrofiSimple to Masrofi';
 
     /**
      * Execute the console command.
@@ -39,25 +38,32 @@ class MigrateMasrofiSimple extends Command
             $this->error("No user found with email: $userEmail");
             return 1;
         }
-        $this->info(" Found user with email: $userEmail");
+        $this->info("Found user with email: $userEmail");
 
         $path = $this->argument('path');
         if(!File::exists($path)){
             $this->error("MasrofiSimple not found at: $path");
             return 1;
         }
-        $this->info(" Found MasrofiSimple at: $path");
+        $this->info("Found MasrofiSimple at: $path");
+
+        $envFile = "$path/.env";
+        if(!File::exists($envFile)){
+            $this->error(".env file not found at: $envFile");
+            return 1;
+        }
+        $this->info("Found .env file at: $envFile");
         
         $jsonDataBase = "$path/db.json";
         if(!File::exists($jsonDataBase)){
             $this->error("db.json not found at: $jsonDataBase");
             return 1;
         }
-        $this->info(" Fount db.json at: $jsonDataBase");
+        $this->info("Fount db.json at: $jsonDataBase");
 
         $transactions = json_decode(File::get($jsonDataBase));
         if(!is_array($transactions)){
-            $this->error("Invalid array in: $jsonDataBase");
+            $this->error("Invalid db.json in: $jsonDataBase");
             return 1;
         }
         if(count($transactions) == 0){
@@ -83,7 +89,7 @@ class MigrateMasrofiSimple extends Command
                     $imagePath = null;
                 }
         
-                $storedPath = null; // Initialize storedPath
+                $storedPath = null;
                 if ($imagePath) {
                     $storedPath = Storage::disk('public')->putFile('invoices', new HttpFile($imagePath));
                 }
@@ -105,20 +111,14 @@ class MigrateMasrofiSimple extends Command
         }
         $this->info(" Successfully migrated $transactionCount transactions");
 
-        $envFile = "$path/.env";
-        if(!File::exists($envFile)){
-            $this->error(".env file not found at: $envFile");
-            return 1;
-        }
-        $this->info("Found .env file at: $envFile");
         
         $envContent = File::get($envFile);
         $monthlyBudget = $this->getEnvValue($envContent, 'MONTHLY_BUDGET');
         $startOfTheMonth = $this->getEnvValue($envContent, 'START_DAY_OF_MONTH');
 
         $userConfig = Config::where('user_id', '=', $user->id)->first();
-        $userConfig->monthly_budget = doubleval($monthlyBudget);
-        $userConfig->start_of_the_month = intval($startOfTheMonth);
+        $userConfig->monthly_budget = doubleval($monthlyBudget) ?? 0;
+        $userConfig->start_of_the_month = intval($startOfTheMonth) ?? 1;
         $userConfig->update();
 
         $this->info("Successfully migrate configuration");
