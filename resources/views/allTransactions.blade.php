@@ -126,8 +126,8 @@
                                     <div style="margin: 15px;">
                                         <div class="form-text">ترتيب بشكل</div>
                                         <select class="form-select" aria-label="ترتيب بشكل" name="sortIn">
-                                            <option value="asc" selected>تصاعدي</option>
-                                            <option value="desc">تنازلي</option>
+                                            <option value="asc">تصاعدي</option>
+                                            <option value="desc" selected>تنازلي</option>
                                         </select>
 
                                     </div>
@@ -136,8 +136,8 @@
                                     <div style="margin: 15px;">
                                         <div class="form-text">ترتيب حسب</div>
                                         <select class="form-select" aria-label="ترتيب حسب" name="sortBy">
-                                            <option value="id" selected>رقم العملية</option>
-                                            <option value="date">تاريخ العمليّة</option>
+                                            <option value="id">رقم العملية</option>
+                                            <option value="date" selected>تاريخ العمليّة</option>
                                             <option value="amount">مبلغ العمليّة</option>
                                             <option value="created_at">تاريخ إدخال العمليّة</option>
                                         </select>

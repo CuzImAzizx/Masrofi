@@ -26,7 +26,7 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/insertTransaction', [UserController::class, 'insertTransaction']);
 
-    Route::get('/transactions', [UserController::class, 'viewAllTransactions']);
+    Route::get('/transactions', [UserController::class, 'viewTransactionsThisMonth']);
     Route::post('/transactions', [UserController::class, 'filterTransactions']);
 
     Route::get('/transactions/{id}/edit', [UserController::class, 'viewEditTransactionPage']);

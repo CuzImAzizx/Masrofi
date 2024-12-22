@@ -37,9 +37,9 @@ If you prefer, you can run and host Masrofi on your own server. (Docker version 
 
 #### Requirements
 Make sure you have the following installed on your machine:
-- Git
-- PHP
-- Composer
+- git
+- php 8.2
+- composer
 - Laravel
 - Gemini API key ([Get one for free here](https://ai.google.dev/gemini-api/docs/api-key#:~:text=You%20can%20create%20a%20key%20with%20a%20few%20clicks%20in%20Google%20AI%20Studio))
 
@@ -86,7 +86,12 @@ You may be prompted to create a new SQLite database. Confirm to create the datab
 php artisan db:seed
 ```
 
-9. **Run the Development Server**
+9. **Create Storage Links**
+```bash
+php artisan storage:link
+```
+
+10. **Run the Development Server**
 ```bash
 php artisan serve
 ```

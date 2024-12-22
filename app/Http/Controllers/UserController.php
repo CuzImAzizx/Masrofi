@@ -127,6 +127,7 @@ class UserController extends Controller
         $dates = $this->getDates();
         $transactions = Transaction::where('user_id', '=', $user->id)
         ->whereBetween('date',[$dates->startDate, $dates->endDate])
+        ->orderBy('date', 'desc')
         ->get();
 
         $insight = $this->getInsight($transactions);
@@ -146,6 +147,7 @@ class UserController extends Controller
         $user = auth()->user();
         //$transactions = Transaction::where('user_id', '=', $user->id)->get();
         $transactions = Transaction::where('user_id', '=', $user->id)
+        ->orderBy('date', 'desc')
         ->get();
         $insight = $this->getInsight($transactions);
 
