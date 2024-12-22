@@ -92,7 +92,7 @@ class UserController extends Controller
             'storeName' => 'required|max:255',
             'amount' => 'required|max:255',
             'date' => 'required|date_format:Y-m-d',
-            'image' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
+            'image' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:5120',
             'note' => 'nullable|max:2500'
         ]);
 
@@ -523,7 +523,7 @@ class UserController extends Controller
         $today = Carbon::now();
 
         $startDateString = $today->year . "-" . $today->month . "-" . $startDay;
-        $startDate = Carbon::parse($startDateString);
+        $startDate = Carbon::parse($startDateString)->subSecond();
 
         if($today->day < $startDay){
             // new month in calender but not for the user's month cycle
