@@ -43,9 +43,28 @@
 
 </div>
 <br>
+@if (auth()->check() and auth()->user()->terms_acceptance_date != null)
+<div class="card">
+    <div class="card-body" style="text-align: right; max-width:500px">
+    <div class="custom-card-header" style="text-align:center">
+    <h2>تأكيد القراءة والقبول</h2>
+    </div>
+    <br>
+    <strong>
+    تمت الموافقة على شروط وأحكام الاستخدام في تاريخ {{ \Carbon\Carbon::parse(auth()->user()->terms_acceptance_date)->format('Y-m-d') }} بالساعة {{ \Carbon\Carbon::parse(auth()->user()->terms_acceptance_date)->format('H:i') }}
+    </strong>
+
+        <br>
+    </div>
+</div>
+
+<p>
+</p>
+
+@endif
 @if ($viewChoices)
 <div class="card">
-    <div class="card-body">
+    <div class="card-body" style="text-align: right; max-width:500px">
     <div class="custom-card-header" style="text-align:center">
     <h2>تأكيد القراءة والقبول</h2>
     </div>
