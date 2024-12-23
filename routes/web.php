@@ -9,6 +9,7 @@ Route::get('/', function () {
     //return view('welcome');
     return redirect('/home');
 });
+Route::get('/terms', [UserController::class, 'displayTerms']);
 
 Route::get('/dashboard', function () {
     //return view('dashboard');
@@ -16,6 +17,12 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
+    Route::get('/terms/accept', [UserController::class, 'acceptTerms']);
+    Route::get('/terms/deny', [UserController::class, 'denyTerms']);
+
+});
+
+Route::middleware(['auth', 'TermsAccepted'])->group(function () {
 
     Route::get('/home', [UserController::class, 'showHomePage']);
 

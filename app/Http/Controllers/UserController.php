@@ -6,6 +6,7 @@ use App\Models\Config;
 use App\Models\Plan;
 use App\Models\Subscription;
 use App\Models\Transaction;
+use App\Models\User;
 use Carbon\Carbon;
 use Gemini;
 use Illuminate\Http\Request;
@@ -13,6 +14,20 @@ use stdClass;
 
 class UserController extends Controller
 {
+    public function displayTerms(){
+        $viewChoices = session('viewChoices', false);
+        return view('terms')->with('viewChoices', $viewChoices);
+    }
+    public function acceptTerms(){
+        $user = auth()->user();
+        $user->terms_acceptance_date = now();
+        $user->update();
+        return redirect('/');
+    }
+    public function denyTerms(){
+        return redirect('logout');
+        
+    }
     public function showHomePage(){
         //Get the authentecated user
         $user = auth()->user();
