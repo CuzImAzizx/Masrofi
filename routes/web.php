@@ -44,8 +44,9 @@ Route::middleware(['auth', 'TermsAccepted'])->group(function () {
     Route::get('/profile', [UserController::class, 'viewProfileSettings']);
     Route::post('/profile', [UserController::class, 'updateProfile']);
 
-    Route::post('/transactions/export', [UserController::class, 'exportTransactions']);
-
+    Route::post('/transactions/export', [UserController::class, 'displayTransactionsTabular']);
+    Route::post('/transactions/export/csv', [UserController::class, 'downloadCsv']);
+    Route::post('/transactions/export/json', [UserController::class, 'downloadJson']);
     //Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     //Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     //Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

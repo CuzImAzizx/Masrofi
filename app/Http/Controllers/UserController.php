@@ -530,21 +530,51 @@ class UserController extends Controller
         return $homePageInsight;
     }
 
-    public function exportTransactions(Request $request){
+    public function displayTransactionsTabular(Request $request){
         $request->validate([
             'transactions' => 'required|string',
-            'formatType' => 'required|string|in:pdf,csv,json',
         ]);
         $transactions = json_decode($request->transactions);
         if(!is_array($transactions)){
             //Something is off. User tried to manipulate the form's hidden inputs
             return redirect('https://ar.wikipedia.org/wiki/%D9%86%D8%B8%D8%A7%D9%81%D8%A9_%D8%B4%D8%AE%D8%B5%D9%8A%D8%A9');
         }
+        return view('printTransactions')->with('transactions', $transactions);
+        
+        //'formatType' => 'required|string|in:pdf,csv,json',
         if($request->formatType == "csv"){
             return $this->generateTransactionsCsv($transactions);
-        } 
+        }  else if($request->formatType == "pdf"){
+            return view('printTransactions')->with('transactions', $transactions);
+        }
         //Other formats soon
     }
+
+    public function downloadCsv(Request $request){
+        $request->validate([
+            'transactions' => 'required|string',
+        ]);
+        $transactions = json_decode($request->transactions);
+        if(!is_array($transactions)){
+            //Something is off. User tried to manipulate the form's hidden inputs
+            return redirect('https://ar.wikipedia.org/wiki/%D9%86%D8%B8%D8%A7%D9%81%D8%A9_%D8%B4%D8%AE%D8%B5%D9%8A%D8%A9');
+        }
+
+        return $this->generateTransactionsCsv($transactions);
+    }
+    public function downloadJson(Request $request){
+        $request->validate([
+            'transactions' => 'required|string',
+        ]);
+        $transactions = json_decode($request->transactions);
+        if(!is_array($transactions)){
+            //Something is off. User tried to manipulate the form's hidden inputs
+            return redirect('https://ar.wikipedia.org/wiki/%D9%86%D8%B8%D8%A7%D9%81%D8%A9_%D8%B4%D8%AE%D8%B5%D9%8A%D8%A9');
+        }
+
+        return $this->generateTransactionsJson($transactions);
+    }
+
 
     public function generateTransactionsCsv($transactions){
         $random = Str::random(20); //Really bad and tem solution
@@ -583,6 +613,42 @@ class UserController extends Controller
         $finalFileName = "transactions-$now.csv";
         return response()->download($fileName, $finalFileName, $headers);
     }
+
+    public function generateTransactionsJson($transactions){
+        // Generate a unique filename
+        $random = Str::random(20);
+        $fileName = "$random.json";
+
+        // Prepare the data for JSON
+        $data = [];
+        foreach ($transactions as $transaction) {
+            $data[] = [
+                'id' => $transaction->id,
+                'store_name' => $transaction->store_name,
+                'amount' => $transaction->amount,
+                'date' => $transaction->date,
+                'note' => $transaction->note,
+                'image' => $transaction->image ? asset("storage/" . $transaction->image) : null,
+                'sms_message' => $transaction->sms_message,
+                'created_at' => Carbon::parse($transaction->created_at)->format("Y-m-d H:i:s"),
+            ];
+        }
+
+        // Convert the data to JSON format
+        $jsonContent = json_encode($data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+
+        // Save the JSON content to a file
+        file_put_contents($fileName, $jsonContent);
+
+        // Set headers for JSON download
+        $headers = ['Content-Type' => 'application/json; charset=UTF-8'];
+        $now = now()->format("Y-m-d-H-i-s");
+        $finalFileName = "transactions-$now.json";
+
+        // Return the download response
+        return response()->download($fileName, $finalFileName, $headers);
+    }
+
 
     /**
      * Get the start and end dates for a one month for the auth user

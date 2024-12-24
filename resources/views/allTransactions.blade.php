@@ -286,9 +286,13 @@
 
             @endif
             <!-- Button trigger modal -->
-<button type="button" class="btn btn-info" style="width: 80%;" data-bs-toggle="modal" data-bs-target="#export">
-🖶 استخراج البيانات
-</button>
+            <form action="/transactions/export" method="post">
+                @csrf
+            <input type="text" hidden name="transactions" value="{{json_encode($transactions)}}">
+            <button type="submit" class="btn btn-info" style="width: 80%;">🖶 استخراج البيانات</button>
+            </form>
+
+
 <!-- Modal -->
 <div class="modal fade" id="export" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
@@ -309,7 +313,7 @@
     <div class="col">
     <div class="form-check" style="display: flex; justify-content: center; align-items: center; text-align: center; ">
     <label class="form-check-label d-flex align-items-center">
-        <input class="form-check-input me-2" type="radio" name="formatType" value="pdf" disabled>
+        <input class="form-check-input me-2" type="radio" name="formatType" value="pdf">
         <strong>PDF</strong>
     </label>
 </div>
@@ -332,7 +336,7 @@
     </div>
   </div>
 </div>
-<input type="text" hidden name="transactions" value="{{json_encode($transactions)}}">
+
 <br>
 <button type="submit" class="btn btn-primary">تحميل</button>
 
