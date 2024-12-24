@@ -6,11 +6,11 @@ use App\Models\Config;
 use App\Models\Plan;
 use App\Models\Subscription;
 use App\Models\Transaction;
-use App\Models\User;
 use Carbon\Carbon;
 use Gemini;
 use Illuminate\Http\Request;
 use stdClass;
+use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
@@ -528,6 +528,60 @@ class UserController extends Controller
         $homePageInsight->spendingsThisMonth = $spendingsThisMonth;
         $homePageInsight->leftFromBudget = $leftFromBudget;
         return $homePageInsight;
+    }
+
+    public function exportTransactions(Request $request){
+        $request->validate([
+            'transactions' => 'required|string',
+            'formatType' => 'required|string|in:pdf,csv,json',
+        ]);
+        $transactions = json_decode($request->transactions);
+        if(!is_array($transactions)){
+            //Something is off. User tried to manipulate the form's hidden inputs
+            return redirect('https://ar.wikipedia.org/wiki/%D9%86%D8%B8%D8%A7%D9%81%D8%A9_%D8%B4%D8%AE%D8%B5%D9%8A%D8%A9');
+        }
+        if($request->formatType == "csv"){
+            return $this->generateTransactionsCsv($transactions);
+        } 
+        //Other formats soon
+    }
+
+    public function generateTransactionsCsv($transactions){
+        $random = Str::random(20); //Really bad and tem solution
+        $fileName= "$random.csv";
+        $fp = fopen($fileName, "w+");
+        fwrite($fp, "\xEF\xBB\xBF");
+        fputcsv($fp, array(
+            "رقم العمليّة",
+            "اسم المتجر",
+            "المبلغ",
+            "تاريخ العمليّة",
+            "ملاحظات",
+            "صورة الفاتورة",
+            "رسالة عمليّة الشراء",
+            "تاريخ إدخال العملية"
+        ));
+        foreach($transactions as $transaction){
+            $imageUrl = "";
+            if($transaction->image){
+                $imageUrl = asset("storage/" . $transaction->image);
+            }
+            fputcsv($fp, array(
+                $transaction->id,
+                $transaction->store_name,
+                $transaction->amount,
+                $transaction->date,
+                $transaction->note,
+                $imageUrl,
+                $transaction->sms_message,
+                Carbon::parse($transaction->created_at)->format("Y-m-d-H-i-s"),
+            ));
+        }
+        fclose($fp);
+        $headers = array('Content-Type' => 'text/csv; charset=UTF-8');
+        $now = now()->format("Y-m-d-H-i-s");
+        $finalFileName = "transactions-$now.csv";
+        return response()->download($fileName, $finalFileName, $headers);
     }
 
     /**
