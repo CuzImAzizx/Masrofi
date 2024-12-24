@@ -540,14 +540,6 @@ class UserController extends Controller
             return redirect('https://ar.wikipedia.org/wiki/%D9%86%D8%B8%D8%A7%D9%81%D8%A9_%D8%B4%D8%AE%D8%B5%D9%8A%D8%A9');
         }
         return view('printTransactions')->with('transactions', $transactions);
-        
-        //'formatType' => 'required|string|in:pdf,csv,json',
-        if($request->formatType == "csv"){
-            return $this->generateTransactionsCsv($transactions);
-        }  else if($request->formatType == "pdf"){
-            return view('printTransactions')->with('transactions', $transactions);
-        }
-        //Other formats soon
     }
 
     public function downloadCsv(Request $request){

@@ -285,72 +285,11 @@
             <p>يتم عرض العمليّات من {{$dates->startDate->toDateString()}} الى {{$dates->endDate->toDateString()}}</p>
 
             @endif
-            <!-- Button trigger modal -->
             <form action="/transactions/export" method="post">
                 @csrf
             <input type="text" hidden name="transactions" value="{{json_encode($transactions)}}">
             <button type="submit" class="btn btn-info" style="width: 80%;">🖶 استخراج البيانات</button>
-            </form>
-
-
-<!-- Modal -->
-<div class="modal fade" id="export" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5">استخراج العلميّات</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <h2>استخراج العلميّات</h2>
-        <p>استخرج وحمّل عمليّاتك وشاركها مع اللي تبي</p>
-
-<form action="/transactions/export" method="post">
-    @csrf
-<h5>صيغة الملف</h5>
-<div class="container text-center">
-  <div class="row">
-    <div class="col">
-    <div class="form-check" style="display: flex; justify-content: center; align-items: center; text-align: center; ">
-    <label class="form-check-label d-flex align-items-center">
-        <input class="form-check-input me-2" type="radio" name="formatType" value="pdf">
-        <strong>PDF</strong>
-    </label>
-</div>
-    </div>
-    <div class="col">
-    <div class="form-check" style="display: flex; justify-content: center; align-items: center; text-align: center; ">
-    <label class="form-check-label d-flex align-items-center">
-        <input class="form-check-input me-2" type="radio" name="formatType" checked value="csv" >
-        <strong>CSV</strong>
-    </label>
-</div>
-    </div>
-    <div class="col">
-    <div class="form-check" style="display: flex; justify-content: center; align-items: center; text-align: center; ">
-    <label class="form-check-label d-flex align-items-center">
-        <input class="form-check-input me-2" type="radio" name="formatType" value="json" disabled>
-        <strong>JSON</strong>
-    </label>
-</div>
-    </div>
-  </div>
-</div>
-
-<br>
-<button type="submit" class="btn btn-primary">تحميل</button>
-
-
-</form>
-
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">الخروج</button>
-      </div>
-    </div>
-  </div>
-</div>
-            
+            </form>            
         </div>
         <hr>
         <table class="table" role="table">

@@ -24,6 +24,45 @@
 </head>
 
 <body>
+<div class="no-print">
+    <br><br>
+<div style="text-align:center">
+<div class="card container" style="max-width: 500px;">
+    <div class="card-body">
+        <div class="card-header">
+        <h3>لوحة التحكم</h3>
+        </div>
+        <br>
+        <p>تحت بتلاقي الجدول حق العمليّات اللي اخترت انك تستخرجها. تقدر تطبع الصفحة، أو تحمّلها بمختلف الصيغات</p>
+        <p>لوحة التحكم هذي ما راح تظهر اذا جيت تطبع الصفحة او تحفظها</p>
+
+        <button class="btn btn-primary btn-lg" onclick="printPage()" style="width:80%">PDF طباعة / حفظ كـ</button>
+
+        <br>
+        <br>
+        <form action="/transactions/export/csv" method="post">
+        @csrf
+        <input type="text" hidden name="transactions" value="{{json_encode($transactions)}}">
+        <button class="btn btn-outline-primary" type="submit" style="width:80%"> CSV تحميل كـ</button>
+        </form>
+        <br>
+        <form action="/transactions/export/json" method="post">
+        @csrf
+        <input type="text" hidden name="transactions" value="{{json_encode($transactions)}}">
+        <button class="btn btn-outline-primary" type="submit" style="width:80%"> JSON تحميل كـ</button>
+        </form>
+        <br>
+        <a href="{{url()->previous()}}"><button class="btn btn-outline-secondary" style="width:80%">العودة</button></a>
+
+    </div>
+
+</div>
+</div>
+
+    
+</div>
+
+
     <table class="table table-striped">
         <thead>
             <tr>
@@ -74,36 +113,6 @@
         </tbody>
     </table>
     
-<div class="no-print">
-    <br><br>
-<div style="text-align:center">
-<div class="card container" style="max-width: 500px;">
-    <div class="card-body">
-        <button class="btn btn-primary btn-lg" onclick="printPage()" style="width:80%">PDF طباعة / حفظ كـ</button>
-
-        <br>
-        <br>
-        <form action="/transactions/export/csv" method="post">
-        @csrf
-        <input type="text" hidden name="transactions" value="{{json_encode($transactions)}}">
-        <button class="btn btn-outline-primary" type="submit" style="width:80%"> CSV حفظ كـ</button>
-        </form>
-        <br>
-        <form action="/transactions/export/json" method="post">
-        @csrf
-        <input type="text" hidden name="transactions" value="{{json_encode($transactions)}}">
-        <button class="btn btn-outline-primary" type="submit" style="width:80%"> JSON حفظ كـ</button>
-        </form>
-        <br>
-        <a href="{{url()->previous()}}"><button class="btn btn-outline-secondary" style="width:80%">العودة</button></a>
-
-    </div>
-
-</div>
-</div>
-
-    
-</div>
 <script>
     function printPage() {
         window.print();
