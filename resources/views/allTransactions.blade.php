@@ -287,7 +287,7 @@
             @endif
             <form action="/transactions/export" method="post">
                 @csrf
-            <input type="text" hidden name="transactions" value="{{json_encode($transactions)}}">
+            <input type="text" hidden name="transactions" value="{{json_encode($transactions->reverse()->values())}}">
             <button type="submit" class="btn btn-info" style="width: 80%;">🖶 استخراج البيانات</button>
             </form>            
         </div>

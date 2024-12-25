@@ -29,7 +29,7 @@ Masrofi is a personal expense tracking web application built with Laravel. It's 
 ## How to use Masrofi?
 
 ### Use the online version for free
-You can create an account and start using Masrofi **for free** [here](https://masrofi.realaziz.xyz/). (Not at the moment)
+You can create an account and start using Masrofi **for free** [here](https://masrofi.realaziz.xyz/).
 
 ### Self-hosting
 
@@ -39,8 +39,7 @@ If you prefer, you can run and host Masrofi on your own server. (Docker version 
 Make sure you have the following installed on your machine:
 - git
 - php 8.2
-- composer
-- Laravel
+- composer 2.7
 - Gemini API key ([Get one for free here](https://ai.google.dev/gemini-api/docs/api-key#:~:text=You%20can%20create%20a%20key%20with%20a%20few%20clicks%20in%20Google%20AI%20Studio))
 
 ### Installation steps
