@@ -539,7 +539,10 @@ class UserController extends Controller
             //Something is off. User tried to manipulate the form's hidden inputs
             return redirect('https://ar.wikipedia.org/wiki/%D9%86%D8%B8%D8%A7%D9%81%D8%A9_%D8%B4%D8%AE%D8%B5%D9%8A%D8%A9');
         }
-        return view('printTransactions')->with('transactions', $transactions);
+        $insight = $this->getInsight($transactions);
+        return view('printTransactions')
+        ->with('transactions', $transactions)
+        ->with('insight', $insight);
     }
 
     public function downloadCsv(Request $request){
@@ -674,7 +677,8 @@ class UserController extends Controller
     $total = 0;
     $totalOutgoing = 0;
     $totalIncoming = 0;
-    $transactionsCount = $transactions->count();
+    //$transactionsCount = $transactions->count();
+    $transactionsCount = count($transactions);
     for($i = 0; $i < $transactionsCount; $i++){
         $transaction = $transactions[$i];
         $total += $transaction->amount;

@@ -7,6 +7,8 @@
     <title>transactions-{{\Carbon\Carbon::now()->format('Y-m-d H:i:s')}}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="/icon.png">
     <style>
         @media print {
             .no-print {
@@ -14,6 +16,17 @@
                 /* This class will hide the element when printing */
             }
         }
+        .cell {
+    border: 1px solid #dbdbdb;
+}
+.custom-card-header {
+    background-color: #f0f0f0;
+    color: #333;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+
     </style>
         <script>
         // Function to trigger the print dialog
@@ -61,11 +74,119 @@
 
     
 </div>
+<br><br>
+<div class="container text-center">
+  <div class="row">
+    <div class="col">
+        <canvas id="myChart"></canvas>
+    </div>
+    <div class="col">
+    <div class="card-body">
+            <div class="custom-card-header">
+                <h2>ملخّص العمليّات</h2>
+            </div>
+            <div class="container text-center">
+                <div class="row">
+                    <div class="col cell">
+                        <div style="margin: 15px;">
+                            <p>عدد العمليّات</p>
+                            <p>عمليّة <bdi>{{$insight->transactionsCount}}</bdi></p>
+                        </div>
+                    </div>
+                    <div class="col cell">
+                        <div style="margin: 15px;">
+                            <p>إجمالي المبلغ</p>
+                            @if ($insight->total >= 0)
+                                <p class="badge text-bg-success" style="font-size: 90%">ريال <bdi>{{$insight->total}}</bdi></p>
+                            @else
+                                <p class="badge text-bg-danger" style="font-size: 90%">ريال <bdi>{{$insight->total}}</bdi></p>
+                            @endif
+                        </div>
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col cell">
+                        <div style="margin: 15px;">
+                            <p>الوارد</p>
+                            <p class="badge text-bg-success" style="font-size: 90%">ريال
+                                <bdi>{{$insight->totalIncoming}}</bdi>
+                            </p>
+
+                        </div>
+
+                    </div>
+                    <div class="col cell">
+                        <div style="margin: 15px;">
+                            <p>الصادر</p>
+                            <p class="badge text-bg-danger" style="font-size: 90%">ريال
+                                <bdi>{{$insight->totalOutgoing}}</bdi>
+                            </p>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+  </div>
+</div>
+<br><br>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    let transactions = {!! json_encode($transactions) !!};
+    transactions = transactions.filter(transaction => transaction.amount <= 0);
+
+
+    // Aggregate spending by date
+    const spendingByDate = {};
+
+    transactions.forEach(transaction => {
+        const date = transaction.date;
+        const amount = transaction.amount;
+
+        if (!spendingByDate[date]) {
+            spendingByDate[date] = 0;
+        }
+        spendingByDate[date] += amount; // Sum up the spending
+    });
+
+    // Prepare labels and data arrays
+    const labels = Object.keys(spendingByDate);
+    const data = labels.map(label => Math.abs(spendingByDate[label])); // Get absolute values
+
+    // Chart.js setup
+    const ctx = document.getElementById('myChart');
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'المبلغ المصروف',
+                data: data,
+                borderWidth: 1,
+                borderColor: 'rgb(192, 75, 75)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)'
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
 
 
     <table class="table table-striped">
         <thead>
-            <tr>
+            <tr style="text-align:center">
                 <th scope="col">رقم العمليّة</th>
                 <th scope="col">اسم المتجر</th>
                 <th scope="col">المبلغ</th>
@@ -104,7 +225,7 @@
                     <td scope="row" class="{{$amountClass}}">{{$transaction->amount}}</td>
                     <td scope="row">{{$transaction->date}}</td>
                     <td scope="row">{{$transaction->note}}</td>
-                    <td scope="row" class="{{$imageWanrOrNot}}">{!! $imageLink ?: $imageUrl !!}</td>
+                    <td scope="row" class="{{$imageWanrOrNot}}"><small>{!! $imageLink ?: $imageUrl !!}</small></td>
                     <td scope="row" class="{{$messageWarnOrNot}}">{{$smsMessage}}</td>
                     <td scope="row">{{ \Carbon\Carbon::parse($transaction->created_at)->format('Y-m-d H:i:s') }}</td>
                 </tr>
