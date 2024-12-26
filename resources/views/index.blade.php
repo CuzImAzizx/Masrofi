@@ -74,10 +74,8 @@
 
 </div>
 
-<a href="/addTransaction"><button type="button" class="btn btn-primary btn-lg" style="width: 90%; margin:10px; ">إدخال عمليّة
-        جديدة</button></a>
+<a href="/addTransaction"><button type="button" class="btn btn-primary btn-lg" style="width: 90%; margin:10px; "><i class="fa-solid fa-plus"></i> إدخال عمليّة جديدة</button></a>
 
-<a href="/transactions"><button type="button" class="btn btn-secondary" style="width: 90%; margin:5px;">عرض تاريخ
-        العمليّات</button>
+<a href="/transactions"><button type="button" class="btn btn-secondary" style="width: 90%; margin:5px;"><i class="fa-solid fa-clock-rotate-left"></i> عرض تاريخ العمليّات</button>
 </a>
 @endsection

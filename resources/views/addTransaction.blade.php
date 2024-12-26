@@ -12,6 +12,7 @@
                         البنك</labe>
                         <textarea class="form-control" id="exampleFormControlTextarea1" rows="4" required name="smsMessage"
                             disabled>{{old('smsMessage')}}</textarea>
+                            <small class="tajawal-light">✨مدعّم بالذكاء الاصطناعي</small>
                 </div>
 
                 <div class="mb-3">
@@ -41,9 +42,9 @@
             
             <div class="mb-3">
             @if (!$worthiness['isWorthy'])
-            <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;" disabled>إرسال العمليّة</button>
+            <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;" disabled><i class="fa-solid fa-magnifying-glass-chart"></i> إرسال العمليّة</button>
             @else
-            <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">إرسال العمليّة</button>
+            <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;"><i class="fa-solid fa-magnifying-glass-chart"></i> إرسال العمليّة</button>
             @endif
             </div>
             <div class="mb-3">
@@ -61,8 +62,7 @@
         </form>
         <hr>
         <h4>أو بإمكانك</h4>
-        <a href="/addTransactionManual"><button type="submit" class="btn btn-secondary" style="width: 90%;">إدخال
-                العمليّة بشكل يدوي</button></a>
+        <a href="/addTransactionManual"><button type="submit" class="btn btn-secondary" style="width: 90%;"><i class="fa-solid fa-plus"></i> إدخال العمليّة بشكل يدوي</button></a>
     </div>
 </div>
 <a href="/home"><button type="submit" class="btn btn-outline-secondary"

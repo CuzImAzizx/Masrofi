@@ -9,6 +9,7 @@
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal&display=swap" rel="stylesheet">
     <link rel="icon" type="image/x-icon" href="/icon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <style>
         @media print {
             .no-print {
@@ -25,6 +26,12 @@
     padding: 10px;
     border-bottom: 1px solid #ccc;
 }
+.tajawal-medium {
+    font-family: "Tajawal", sans-serif;
+    font-weight: 500;
+    font-style: normal;
+  }
+
 
 
     </style>
@@ -36,7 +43,7 @@
     </script>
 </head>
 
-<body>
+<body class="tajawal-medium">
 <div class="no-print">
     <br><br>
 <div style="text-align:center">
@@ -49,20 +56,20 @@
         <p>تحت بتلاقي الجدول حق العمليّات اللي اخترت انك تستخرجها. تقدر تطبع الصفحة، أو تحمّلها بمختلف الصيغات</p>
         <p>لوحة التحكم هذي ما راح تظهر اذا جيت تطبع الصفحة او تحفظها</p>
 
-        <button class="btn btn-primary btn-lg" onclick="printPage()" style="width:80%">PDF طباعة / حفظ كـ</button>
+        <button class="btn btn-primary btn-lg" onclick="printPage()" style="width:80%"><i class="fa-solid fa-file-pdf"></i> PDF طباعة / حفظ كـ</button>
 
         <br>
         <br>
         <form action="/transactions/export/csv" method="post">
         @csrf
         <input type="text" hidden name="transactions" value="{{json_encode($transactions)}}">
-        <button class="btn btn-outline-primary" type="submit" style="width:80%"> CSV تحميل كـ</button>
+        <button class="btn btn-outline-primary" type="submit" style="width:80%"><i class="fa-solid fa-file-csv"></i> CSV تحميل كـ</button>
         </form>
         <br>
         <form action="/transactions/export/json" method="post">
         @csrf
         <input type="text" hidden name="transactions" value="{{json_encode($transactions)}}">
-        <button class="btn btn-outline-primary" type="submit" style="width:80%"> JSON تحميل كـ</button>
+        <button class="btn btn-outline-primary" type="submit" style="width:80%"><i class="fa-solid fa-code"></i> JSON تحميل كـ</button>
         </form>
         <br>
         <a href="{{url()->previous()}}"><button class="btn btn-outline-secondary" style="width:80%">العودة</button></a>
@@ -78,12 +85,16 @@
 <div class="container text-center">
   <div class="row">
     <div class="col">
+    <div class="custom-card-header">
+                <h2>📊 رسم بياني للعمليّات</h2>
+            </div>
+
         <canvas id="myChart"></canvas>
     </div>
     <div class="col">
     <div class="card-body">
             <div class="custom-card-header">
-                <h2>ملخّص العمليّات</h2>
+                <h2>💡 ملخّص العمليّات</h2>
             </div>
             <div class="container text-center">
                 <div class="row">
@@ -106,9 +117,9 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col cell">
+                    <div class="col cell" style="background-color:#e3ffe2">
                         <div style="margin: 15px;">
-                            <p>الوارد</p>
+                            <p><i class="fa-solid fa-chevron-down"></i> الوارد</p>
                             <p class="badge text-bg-success" style="font-size: 90%">ريال
                                 <bdi>{{$insight->totalIncoming}}</bdi>
                             </p>
@@ -116,9 +127,9 @@
                         </div>
 
                     </div>
-                    <div class="col cell">
+                    <div class="col cell" style="background-color:#ffe2e2">
                         <div style="margin: 15px;">
-                            <p>الصادر</p>
+                            <p><i class="fa-solid fa-chevron-up"></i> الصادر</p>
                             <p class="badge text-bg-danger" style="font-size: 90%">ريال
                                 <bdi>{{$insight->totalOutgoing}}</bdi>
                             </p>
@@ -166,11 +177,11 @@
         data: {
             labels: labels,
             datasets: [{
-                label: 'المبلغ المصروف',
+                label: 'المبلغ المصروف (مستثنى الوارد)',
                 data: data,
                 borderWidth: 1,
                 borderColor: 'rgb(192, 75, 75)',
-                backgroundColor: 'rgba(75, 192, 192, 0.2)'
+                backgroundColor: 'rgba(192, 75, 75, 0.2)'
             }]
         },
         options: {
@@ -242,7 +253,15 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
-
+        <p style="text-align: center; font-size: 14px; color: #555;">
+    <small>
+        تم انشاء هذا التقرير من 
+        <strong><a href="{{url('/')}}">مصروفي</a></strong>: 
+        برنامج تتبع المصروفات الشخصية. 
+        <br>
+        <em>مصروفي <a href="{{url('/terms')}}">لا يضمن</a> صحة البيانات أعلاه</em>
+    </small>
+</p>
 </body>
 
 </html>
