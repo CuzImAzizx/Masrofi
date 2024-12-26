@@ -154,8 +154,8 @@
         spendingByDate[date] += amount; // Sum up the spending
     });
 
-    // Prepare labels and data arrays
-    const labels = Object.keys(spendingByDate);
+    // Prepare labels and data arrays, sorted by date
+    const labels = Object.keys(spendingByDate).sort((a, b) => new Date(a) - new Date(b));
     const data = labels.map(label => Math.abs(spendingByDate[label])); // Get absolute values
 
     // Chart.js setup

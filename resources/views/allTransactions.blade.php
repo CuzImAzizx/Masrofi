@@ -202,7 +202,12 @@
         </div>
     @else
         <div class="card-body">
-            <div class="custom-card-header">
+
+
+            <div id="carouselExample" class="carousel slide">
+  <div class="carousel-inner" style="min-height:295px">
+    <div class="carousel-item active">
+    <div class="custom-card-header">
                 <h2>ملخّص العمليّات</h2>
             </div>
             <div class="container text-center">
@@ -249,8 +254,88 @@
                 </div>
             </div>
 
+    </div>
+    <div class="carousel-item">
+        <canvas id="myChart"></canvas>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    let transactions = {!! json_encode($transactions) !!};
+    transactions = transactions.filter(transaction => transaction.amount <= 0);
+
+
+    // Aggregate spending by date
+    const spendingByDate = {};
+
+    transactions.forEach(transaction => {
+        const date = transaction.date;
+        const amount = transaction.amount;
+
+        if (!spendingByDate[date]) {
+            spendingByDate[date] = 0;
+        }
+        spendingByDate[date] += amount; // Sum up the spending
+    });
+
+    
+
+    // Prepare labels and data arrays, sorted by date
+    const labels = Object.keys(spendingByDate).sort((a, b) => new Date(a) - new Date(b));
+    const data = labels.map(label => Math.abs(spendingByDate[label])); // Get absolute values
+
+    // Chart.js setup
+    const ctx = document.getElementById('myChart');
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'المبلغ المصروف',
+                data: data,
+                borderWidth: 1,
+                borderColor: 'rgb(192, 75, 75)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)'
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+  <style>
+        /* Custom styles for carousel controls */
+        .carousel-control-prev-icon,
+        .carousel-control-next-icon {
+            background-color: rgba(0, 0, 0, 0.5); /* Change background color */
+        }
+        
+        .carousel-control-prev {
+            color: red; /* Change arrow color for previous */
+        }
+
+        .carousel-control-next {
+            color: blue; /* Change arrow color for next */
+        }
+    </style>
+
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
+</div>
 
         </div>
+
         <br>
         <hr>
 
