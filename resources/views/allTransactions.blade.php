@@ -262,6 +262,14 @@
 
                 <canvas id="myChart"></canvas>
             </div>
+            <div class="carousel-item">
+            <div class="custom-card-header">
+                    <h2>📊 رسم بياني للعمليّات</h2>
+                    </div>
+
+                <canvas id="myChart2"></canvas>
+            </div>
+
           </div>
           <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script>
@@ -312,7 +320,53 @@
                 }
             });
         </script>
-          <style>
+<script>
+    let transactions2 = {!! json_encode($transactions) !!};
+    transactions2 = transactions2.filter(transaction => transaction.amount <= 0);
+
+    // Aggregate spending by store name
+    const spendingByStore = {};
+
+    transactions2.forEach(transaction => {
+        const storeName = transaction.store_name; // Get store name
+        const amount = transaction.amount;
+
+        if (!spendingByStore[storeName]) {
+            spendingByStore[storeName] = 0;
+        }
+        spendingByStore[storeName] += amount; // Sum up the spending
+    });
+    console.log(spendingByStore);
+
+    // Prepare labels and data arrays
+    const labels2 = Object.keys(spendingByStore); // Store names as labels
+    const data2 = labels2.map(label => Math.abs(spendingByStore[label])); // Get absolute values
+    console.log(data2)
+    // Chart.js setup
+    const ctx2 = document.getElementById('myChart2');
+
+    new Chart(ctx2, {
+        type: 'bar', // Changed to bar chart for better visualization of stores
+        data: {
+            labels: labels2,
+            datasets: [{
+                label: 'المبلغ المصروف حسب المتجر (مستثنى الوارد)',
+                data: data2,
+                borderWidth: 1,
+                borderColor: 'rgb(192, 75, 75)',
+                backgroundColor: 'rgba(192, 75, 75, 0.2)'
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+<style>
                 /* Custom styles for carousel controls */
                 .carousel-control-prev-icon,
                 .carousel-control-next-icon {
@@ -385,6 +439,7 @@
                     <thead style="text-align: right;">
                         <tr class="tajawal-bold">
                             <th scope="col">رقم</th>
+                            <th scope="col">المتجر</th>
                             <th scope="col">المبلغ</th>
                             <th scope="col">التاريخ</th>
                             <th scope="col">ملاحظات</th>
@@ -395,6 +450,11 @@
                         @foreach ($transactions as $transaction)
                             <tr style="text-align: right;">
                                 <td><span class="tajawal-bold">رقم:</span> {{$transaction->id}}</td>
+                                <td>
+                                    <bdo dir="rtl">
+                                        <span class="tajawal-bold">متجر:</span> {{$transaction->store_name}}
+                                    </bdo>
+                                </td>
                                 @if ($transaction->amount > 0)
                                     <td>
                                         <span class="badge text-bg-success" style="font-size: 85%">{{$transaction->amount}}</span>

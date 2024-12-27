@@ -10,6 +10,7 @@ Route::get('/', function () {
     return redirect('/home');
 });
 Route::get('/terms', [UserController::class, 'displayTerms']);
+Route::get('/subscriptions', [UserController::class, 'displayPlans']);
 
 Route::get('/dashboard', function () {
     //return view('dashboard');

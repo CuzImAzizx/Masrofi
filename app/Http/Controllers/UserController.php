@@ -711,4 +711,11 @@ class UserController extends Controller
         $dates = $this->getDates();
         return $dates;
     }
+
+    public function displayPlans(){
+        $user = auth()->user();
+        $plans = Plan::all();
+        //return $plans;
+        return "Not implemented";
+    }
 }

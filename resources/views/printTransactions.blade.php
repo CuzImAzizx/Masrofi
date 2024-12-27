@@ -83,16 +83,23 @@
 </div>
 <br><br>
 <div class="container text-center">
-  <div class="row">
-    <div class="col">
-    <div class="custom-card-header">
+    <div class="row">
+        <div class="col">
+            <div class="custom-card-header">
                 <h2>📊 رسم بياني للعمليّات</h2>
             </div>
 
-        <canvas id="myChart"></canvas>
-    </div>
+            <canvas id="myChart"></canvas>
+        </div>
+        <div class="col">
+            <div class="custom-card-header">
+                <h2>📊 رسم بياني للعمليّات</h2>
+            </div>
+
+            <canvas id="myChart2"></canvas>
+        </div>
     <div class="col">
-    <div class="card-body">
+        <div class="card-body">
             <div class="custom-card-header">
                 <h2>💡 ملخّص العمليّات</h2>
             </div>
@@ -108,9 +115,11 @@
                         <div style="margin: 15px;">
                             <p>إجمالي المبلغ</p>
                             @if ($insight->total >= 0)
-                                <p class="badge text-bg-success" style="font-size: 90%">ريال <bdi>{{$insight->total}}</bdi></p>
+                                <p class="badge text-bg-success" style="font-size: 90%">ريال <bdi>{{$insight->total}}</bdi>
+                                </p>
                             @else
-                                <p class="badge text-bg-danger" style="font-size: 90%">ريال <bdi>{{$insight->total}}</bdi></p>
+                                <p class="badge text-bg-danger" style="font-size: 90%">ريال <bdi>{{$insight->total}}</bdi>
+                                </p>
                             @endif
                         </div>
 
@@ -143,7 +152,8 @@
 
         </div>
     </div>
-  </div>
+    </div>
+</div>
 </div>
 <br><br>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -193,6 +203,53 @@
         }
     });
 </script>
+<script>
+    let transactions2 = {!! json_encode($transactions) !!};
+    transactions2 = transactions2.filter(transaction => transaction.amount <= 0);
+
+    // Aggregate spending by store name
+    const spendingByStore = {};
+
+    transactions2.forEach(transaction => {
+        const storeName = transaction.store_name; // Get store name
+        const amount = transaction.amount;
+
+        if (!spendingByStore[storeName]) {
+            spendingByStore[storeName] = 0;
+        }
+        spendingByStore[storeName] += amount; // Sum up the spending
+    });
+    console.log(spendingByStore);
+
+    // Prepare labels and data arrays
+    const labels2 = Object.keys(spendingByStore); // Store names as labels
+    const data2 = labels2.map(label => Math.abs(spendingByStore[label])); // Get absolute values
+    console.log(data2)
+    // Chart.js setup
+    const ctx2 = document.getElementById('myChart2');
+
+    new Chart(ctx2, {
+        type: 'bar', // Changed to bar chart for better visualization of stores
+        data: {
+            labels: labels2,
+            datasets: [{
+                label: 'المبلغ المصروف حسب المتجر (مستثنى الوارد)',
+                data: data2,
+                borderWidth: 1,
+                borderColor: 'rgb(192, 75, 75)',
+                backgroundColor: 'rgba(192, 75, 75, 0.2)'
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+
 
 
     <table class="table table-striped">
@@ -212,24 +269,24 @@
             @foreach ($transactions as $transaction)
                 <tr>
                     @php
-                        $imageUrl = "لا يوجد صورة";
-                        $imageLink = '';
-                        $imageWanrOrNot = "table-warning";
-                        if ($transaction->image) {
-                            $imageUrl = asset("storage/" . $transaction->image);
-                            $imageLink = "<a href='{$imageUrl}' target='_blank'>$imageUrl</a>";
-                            $imageWanrOrNot = "";
-                        }
-                        $smsMessage = "مدخلة يدويًا";
-                        $messageWarnOrNot = "table-warning";
-                        if ($transaction->sms_message) {
-                            $messageWarnOrNot = "";
-                            $smsMessage = $transaction->sms_message;
-                        }
-                        $amountClass = "table-success";
-                        if ($transaction->amount < 0) {
-                            $amountClass = "table-danger";
-                        }
+    $imageUrl = "لا يوجد صورة";
+    $imageLink = '';
+    $imageWanrOrNot = "table-warning";
+    if ($transaction->image) {
+        $imageUrl = asset("storage/" . $transaction->image);
+        $imageLink = "<a href='{$imageUrl}' target='_blank'>$imageUrl</a>";
+        $imageWanrOrNot = "";
+    }
+    $smsMessage = "مدخلة يدويًا";
+    $messageWarnOrNot = "table-warning";
+    if ($transaction->sms_message) {
+        $messageWarnOrNot = "";
+        $smsMessage = $transaction->sms_message;
+    }
+    $amountClass = "table-success";
+    if ($transaction->amount < 0) {
+        $amountClass = "table-danger";
+    }
                     @endphp
                     <td scope="row">{{$transaction->id}}</td>
                     <td scope="row">{{$transaction->store_name}}</td>

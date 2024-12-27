@@ -27,11 +27,14 @@
                     <div class="col">
                     <div class="form-label">نوع الخطة</div>
                     <p><strong>{{$currentPlan->name}}</strong></p>
+                    @if($currentSubscription->end_date)
+                    <p><strong>{{$currentSubscription->end_date}}</strong> :تاريخ الانتهاء</p>
+                    @endif
                     </div>
                 </div>
             </div>
-            <a href="/subscriptions"><div class="btn btn-secondary" style="width:100%">تطوير الاشتراك</div></a>
-            <br>
+            <div class="btn btn-secondary disabled" style="width:100%">تطوير الاشتراك</div>
+            <p><small>مافي اشتراكات الحين لأنه مافي بنية تحتية للتطبيق</small></p>
             <br>
             <h2>ضبط الميزانية</h2>
             <hr>
