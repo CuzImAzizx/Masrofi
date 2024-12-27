@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>transactions-{{\Carbon\Carbon::now()->format('Y-m-d H:i:s')}}</title>
+    <title id="pageTitle">{{ now()->format('Y') }} سنة {{ now()->format('M') }} تقرير شهر</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal&display=swap" rel="stylesheet">
@@ -31,6 +31,18 @@
     font-weight: 500;
     font-style: normal;
   }
+  .tajawal-regular {
+    font-family: "Tajawal", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+  }
+
+  .tajawal-bold {
+    font-family: "Tajawal", sans-serif;
+    font-weight: 700;
+    font-style: normal;
+  }
+
 
 
 
@@ -43,7 +55,7 @@
     </script>
 </head>
 
-<body class="tajawal-medium">
+<body class="tajawal-regular">
 <div class="no-print">
     <br><br>
 <div style="text-align:center">
@@ -55,6 +67,14 @@
         <br>
         <p>تحت بتلاقي الجدول حق العمليّات اللي اخترت انك تستخرجها. تقدر تطبع الصفحة، أو تحمّلها بمختلف الصيغات</p>
         <p>لوحة التحكم هذي ما راح تظهر اذا جيت تطبع الصفحة او تحفظها</p>
+
+        <div class="mb3">
+            <div class="form-label">
+                عنوان التقرير
+            </div>
+            <input class="form-control" style="text-align: center;" type="text" id="titleInput" value="{{ now()->format('Y') }} سنة {{ now()->format('M') }} تقرير شهر">
+            <br>
+        </div>
 
         <button class="btn btn-primary btn-lg" onclick="printPage()" style="width:80%"><i class="fa-solid fa-file-pdf"></i> PDF طباعة / حفظ كـ</button>
 
@@ -81,6 +101,20 @@
 
     
 </div>
+<br><br>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const inputForm = document.getElementById("titleInput");
+        const title = document.getElementById("title");
+        const pageTitle = document.getElementById("pageTitle")
+        
+        inputForm.addEventListener('input', (e) => {
+            title.innerHTML = inputForm.value;
+            pageTitle.innerHTML = inputForm.value
+        });
+    });
+</script>
+<h1 class="tajawal-bold" id="title" style="text-align:center">{{ now()->format('Y') }} سنة {{ now()->format('M') }} تقرير شهر</h1>
 <br><br>
 <div class="container text-center">
     <div class="row">
@@ -219,12 +253,10 @@
         }
         spendingByStore[storeName] += amount; // Sum up the spending
     });
-    console.log(spendingByStore);
 
     // Prepare labels and data arrays
     const labels2 = Object.keys(spendingByStore); // Store names as labels
     const data2 = labels2.map(label => Math.abs(spendingByStore[label])); // Get absolute values
-    console.log(data2)
     // Chart.js setup
     const ctx2 = document.getElementById('myChart2');
 

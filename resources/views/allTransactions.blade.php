@@ -336,12 +336,10 @@
         }
         spendingByStore[storeName] += amount; // Sum up the spending
     });
-    console.log(spendingByStore);
 
     // Prepare labels and data arrays
     const labels2 = Object.keys(spendingByStore); // Store names as labels
     const data2 = labels2.map(label => Math.abs(spendingByStore[label])); // Get absolute values
-    console.log(data2)
     // Chart.js setup
     const ctx2 = document.getElementById('myChart2');
 
