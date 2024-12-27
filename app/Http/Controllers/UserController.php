@@ -144,6 +144,8 @@ class UserController extends Controller
         ->whereBetween('date',[$dates->startDate, $dates->endDate])
         ->orderBy('date', 'desc')
         ->get();
+        $dates->startDate->addSecond();
+        $dates->endDate->addSecond();
 
         $insight = $this->getInsight($transactions);
 
@@ -386,9 +388,15 @@ class UserController extends Controller
     public function viewProfileSettings(){
         $user = auth()->user();
         $currentSettings = Config::where("user_id", "=", $user->id)->first();
+        $currentSubscription = Subscription::where("user_id", "=", $user->id)->first();
+        $currentPlan = Plan::find($currentSubscription->plan_id)->first();
         $userData = collect($user)->merge(collect($currentSettings));
         $updated = session('updated', false);
-        return view('profile')->with('userData', $userData)->with('updated', $updated);
+        return view('profile')
+        ->with('userData', $userData)
+        ->with('currentSubscription', $currentSubscription)
+        ->with('currentPlan', $currentPlan)
+        ->with('updated', $updated);
     }
 
     public function updateProfile(Request $request){
@@ -700,9 +708,7 @@ class UserController extends Controller
     return $insight;
     }
     public function test(){
-        $toady = Carbon::now();
-        $nextDay = $toady->copy()->endOfDay()->addSecond();
-        $remainingSeconds = round(abs($nextDay->diffInSeconds($toady)));
-        return $remainingSeconds;
+        $dates = $this->getDates();
+        return $dates;
     }
 }
