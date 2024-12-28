@@ -8,11 +8,16 @@ Masrofi is a personal expense tracking web application built with Laravel. It's 
 
 ## What is Special About Masrofi?
 - **Powered by AI**: Using AI model to analyze SMS transaction messages and extract essential information, such as store names, amounts, and dates for convenient and efficient use.
-- **Advanced Searching/Filtering**: Easily query your transactions by name, filter within specific time periods, and search within designated amount ranges for enhanced financial tracking.
-- **Valuable Insights**: You can view valuable insights of your transactions.
-- **Transaction Extraction**: Easily export your transactions in PDF, CSV, or JSON formats for convenient data analysis and visualization.
 
-![alt text](assets/image2.png)
+- **Insights and Visualization**: Gain valuable insights into your spending habits with interactive graphs and visualizations.
+
+- **Advanced Searching/Filtering**: Easily query your transactions by name, filter within specific time periods, and search within designated amount ranges for enhanced financial tracking.
+
+- **Report Generation**: Generate and print detailed reports of your transactions. Export your data in various formats, including PDF, CSV, or JSON, for easy sharing and record-keeping.
+
+![alt text](assets/image22.png)
+
+![alt text](assets/image4.png)
 
 ## What Have Been Improved?
 
