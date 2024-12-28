@@ -114,7 +114,15 @@
         });
     });
 </script>
+<div style="text-align:center">
 <h1 class="tajawal-bold" id="title" style="text-align:center">{{ now()->format('Y') }} سنة {{ now()->format('M') }} تقرير شهر</h1>
+<p>
+    تم انشاء هذا التقرير من <a href="">مصروفي</a> بتاريخ {{now()->format('Y-m-d')}} بالوقت {{now()->format('H:i:s')}}
+<br>
+<em >مصروفي <a href="{{url('/terms')}}">لا يضمن</a> صحة البيانات</em>
+</p>
+
+</div>
 <br><br>
 <div class="container text-center">
     <div class="row">

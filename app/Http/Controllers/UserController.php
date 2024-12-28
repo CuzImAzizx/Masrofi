@@ -20,6 +20,9 @@ class UserController extends Controller
     }
     public function acceptTerms(){
         $user = auth()->user();
+        if($user->terms_acceptance_date){
+            return redirect('/');
+        }
         $user->terms_acceptance_date = now();
         $user->update();
         return redirect('/');

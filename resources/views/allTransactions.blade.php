@@ -429,7 +429,7 @@
                     <form action="/transactions/export" method="post">
                         @csrf
                     <input type="text" hidden name="transactions" value="{{json_encode($transactions->reverse()->values())}}">
-                    <button type="submit" class="btn btn-info" style="width: 80%;"><i class="fa-solid fa-print"></i> استخراج البيانات</button>
+                    <button type="submit" class="btn btn-info" style="width: 80%;"> <i class="fa-solid fa-print"></i> انشاء تقرير</button>
                     </form>            
                 </div>
                 <hr>
