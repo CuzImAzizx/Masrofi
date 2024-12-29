@@ -17,7 +17,7 @@ Masrofi is a personal expense tracking web application built with Laravel. It's 
 
 ![alt text](assets/image22.png)
 
-![alt text](assets/image4.png)
+![alt text](assets/image234.png)
 
 ## What Have Been Improved?
 
@@ -26,6 +26,10 @@ Masrofi is a personal expense tracking web application built with Laravel. It's 
 - **Supports multiple users**: Unlike [MasrofiSimple](https://github.com/CuzImAzizx/MasrofiSimple), which is a single-user application, Masrofi allows multiple users to manage their expenses concurrently.
 
 - **Employs an actual relational database**: Instead of using a single JSON file (`db.json`), Masrofi integrates a relational database, providing better data management and integrity.
+
+- **Enhanced Expense Visualization**: You can now visualize your spending habits through interactive graphs and charts, making it easier to track and analyze expenses over time.
+
+- **Sharing and Extraction Features**: Masrofi allows you to easily share your transaction data and extract reports in various formats, including PDF, CSV, or JSON, for better accessibility and record-keeping.
 
 **Masrofi** now is using modern technologies, it's a multi-user robust web application for tracking personal expenses. With the ability to manipulate transactions efficiently.
 
