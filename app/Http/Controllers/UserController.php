@@ -144,7 +144,7 @@ class UserController extends Controller
 
         $dates = $this->getDates();
         $transactions = Transaction::where('user_id', '=', $user->id)
-        ->whereBetween('date',[$dates->startDate, $dates->endDate])
+        ->whereBetween('date',[$dates->startDate->format("Y-m-d"), $dates->endDate->format("Y-m-d")])
         ->orderBy('date', 'desc')
         ->get();
         $dates->startDate->addSecond();
@@ -202,7 +202,7 @@ class UserController extends Controller
                     
                     //Same logic for `$this->viewTransactionsThisMonth();`
                     $transactions = Transaction::where('user_id', '=', $user->id)
-                    ->whereBetween('date',[$dates->startDate, $dates->endDate])
+                    ->whereBetween('date',[$dates->startDate->format("Y-m-d"), $dates->endDate->format("Y-m-d")])
                     ->orderBy('date', 'desc')
                     ->get();
 
@@ -668,7 +668,7 @@ class UserController extends Controller
         $today = Carbon::now();
 
         $startDateString = $today->year . "-" . $today->month . "-" . $startDay;
-        $startDate = Carbon::parse($startDateString)->subSecond();
+        $startDate = Carbon::parse($startDateString)->addHours(3);
 
         if($today->day < $startDay){
             // new month in calender but not for the user's month cycle

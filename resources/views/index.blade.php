@@ -58,17 +58,20 @@
                             <h2 class="tajawal-bold">📊 رسم بياني للميزانيّة</h2>
 
                         </div>
-                        <div style="max-width:500px; max-height:400px">
+                        <div style="max-width:550px; max-height:400px">
                         <canvas id="myPieChart"></canvas>
+                        <br>
                 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
                 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
                 <script>
                         // Data for the pie chart
+                        const leftFromBudget = {{$homePageInsight->leftFromBudget}};
+                        const spendingsThisMonth = {{abs($homePageInsight->spendingsThisMonth)}}
                         const data = {
                             labels: ['الميزانيّة', 'الصرفيّات'], // Pie chart labels
                             datasets: [{
                                 label: 'رسم بياني للميزانية',
-                                data: [{{$homePageInsight->leftFromBudget}}, {{abs($homePageInsight->spendingsThisMonth)}}],
+                                data: [leftFromBudget, spendingsThisMonth],
                                 backgroundColor: [
                                     'rgba(75, 192, 91, 0.6)', // Color for Budget
                                     'rgba(255, 99, 99, 0.6)'   // Color for Expenses
@@ -111,10 +114,15 @@
                             plugins: [ChartDataLabels], // Register the datalabels plugin
                         };
                         // Create the pie chart instance
-                        const myPieChart = new Chart(
+                        if(leftFromBudget > spendingsThisMonth){
+                            const myPieChart = new Chart(
                             document.getElementById('myPieChart'),
                             config
                         );
+                        } else {
+                            //TODO: Visulize how much is the user overspending their budget
+                            null
+                        }
                 </script>
 
                         </div>
