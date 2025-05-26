@@ -38,7 +38,7 @@ Masrofi is a personal expense tracking web application built with Laravel. It's 
 ## How to use Masrofi?
 
 ### Use the online version for free
-You can create an account and start using Masrofi **for free** [here](https://masrofi.realaziz.xyz/).
+You can create an account and start using Masrofi **for free** [here](https://masrofi.azizcloud.dev/).
 
 ### Self-hosting
 
