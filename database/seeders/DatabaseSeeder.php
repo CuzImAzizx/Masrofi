@@ -33,6 +33,15 @@ class DatabaseSeeder extends Seeder
             "daily_requests" => 100,
             "threshold" => "00:00:10",
         ]);
+
+        //God plan
+        $premiumPlan = Plan::create([
+            "name" => "God",
+            "price" => 9999,
+            "daily_requests" => 10000,
+            "threshold" => "00:00:00",
+        ]);
+
         
 
         //Create the default user and its sub and config:

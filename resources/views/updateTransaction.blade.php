@@ -145,7 +145,7 @@
 
 
             <div class="mb-3">
-                <button type="submit" class="btn btn-primary" style="width: 100%;">تعديل</button>
+                <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;"><i class="fa-solid fa-pencil"></i> تعديل</button>
             </div>
         </form>
     </div>

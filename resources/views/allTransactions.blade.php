@@ -50,7 +50,7 @@
         </p>
         <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample"
             aria-expanded="false" aria-controls="collapseExample" style="width: 100%;">
-            البحث الدقيق
+            <i class="fa-brands fa-searchengin"></i> البحث الدقيق
         </button>
         </p>
         <div class="collapse" id="collapseExample">
@@ -126,8 +126,8 @@
                                     <div style="margin: 15px;">
                                         <div class="form-text">ترتيب بشكل</div>
                                         <select class="form-select" aria-label="ترتيب بشكل" name="sortIn">
-                                            <option value="asc" selected>تصاعدي</option>
-                                            <option value="desc">تنازلي</option>
+                                            <option value="asc">تصاعدي</option>
+                                            <option value="desc" selected>تنازلي</option>
                                         </select>
 
                                     </div>
@@ -136,8 +136,8 @@
                                     <div style="margin: 15px;">
                                         <div class="form-text">ترتيب حسب</div>
                                         <select class="form-select" aria-label="ترتيب حسب" name="sortBy">
-                                            <option value="id" selected>رقم العملية</option>
-                                            <option value="date">تاريخ العمليّة</option>
+                                            <option value="id">رقم العملية</option>
+                                            <option value="date" selected>تاريخ العمليّة</option>
                                             <option value="amount">مبلغ العمليّة</option>
                                             <option value="created_at">تاريخ إدخال العمليّة</option>
                                         </select>
@@ -201,270 +201,428 @@
             @endif
         </div>
     @else
-        <div class="card-body">
+                <div class="card-body">
+
+
+                    <div id="carouselExample" class="carousel slide">
+          <div class="carousel-inner">
+            <div class="carousel-item active">
             <div class="custom-card-header">
-                <h2>ملخّص العمليّات</h2>
-            </div>
-            <div class="container text-center">
-                <div class="row">
-                    <div class="col cell">
-                        <div style="margin: 15px;">
-                            <p>عدد العمليّات</p>
-                            <p>عمليّة <bdi>{{$insight->transactionsCount}}</bdi></p>
-                        </div>
+                    <h2>💡 ملخّص العمليّات</h2>
                     </div>
-                    <div class="col cell">
-                        <div style="margin: 15px;">
-                            <p>إجمالي المبلغ</p>
-                            @if ($insight->total >= 0)
-                                <p class="badge text-bg-success" style="font-size: 90%">ريال <bdi>{{$insight->total}}</bdi></p>
-                            @else
-                                <p class="badge text-bg-danger" style="font-size: 90%">ريال <bdi>{{$insight->total}}</bdi></p>
-                            @endif
-                        </div>
-
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col cell">
-                        <div style="margin: 15px;">
-                            <p>الوارد</p>
-                            <p class="badge text-bg-success" style="font-size: 90%">ريال
-                                <bdi>{{$insight->totalIncoming}}</bdi>
-                            </p>
-
-                        </div>
-
-                    </div>
-                    <div class="col cell">
-                        <div style="margin: 15px;">
-                            <p>الصادر</p>
-                            <p class="badge text-bg-danger" style="font-size: 90%">ريال
-                                <bdi>{{$insight->totalOutgoing}}</bdi>
-                            </p>
-
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-
-
-        </div>
-        <br>
-        <hr>
-
-        <div class="custom-card-header">
-            @if ($viewMode == "AllTransactions")
-            <h2>جميع العمليّات</h2>
-            <p>يتم عرض جميع العمليّات المدخلة</p>
-            @elseif ($viewMode == "TransactionsThisMonth")
-            <h2>عمليّات هذا الشهر</h2>
-            <p>يتم عرض العمليّات من {{$dates->startDate->toDateString()}} الى {{$dates->endDate->toDateString()}}</p>
-            @elseif ($viewMode == "TransactionsPastMonth")
-            <h2>عمليّات الشهر الماضي</h2>
-            <p>يتم عرض العمليّات من {{$dates->startDate->toDateString()}} الى {{$dates->endDate->toDateString()}}</p>
-
-            @elseif ($viewMode == "filteredTransactions")
-            <h2>بحث مخصص</h2>
-            <p>يتم عرض نتيجة البحث باستخدام هذه خيارات البحث</p>
-            <ul>
-                @if ($filterOptions->searchTerm)
-                <li><bdi>{{$filterOptions->searchTerm}}</bdi> :كلمة البحث</li>
-                @endif
-                @if ($filterOptions->startAmount)
-                <li>بمبلغ من {{$filterOptions->startAmount}} الى {{$filterOptions->endAmount}}</li>
-                @endif
-                @if ($filterOptions->startDate)
-                <li>من تاريخ {{$filterOptions->startDate}} الى تاريخ {{$filterOptions->endDate}}</li>
-                @endif
-                
-            </ul>
-            @elseif (is_numeric($viewMode))
-            <h2>عرض عمليّات آخر {{$viewMode}} شهور</h2>
-            <p>يتم عرض العمليّات من {{$dates->startDate->toDateString()}} الى {{$dates->endDate->toDateString()}}</p>
-
-            @endif
-            
-        </div>
-        <hr>
-        <table class="table" role="table">
-            <thead style="text-align: right;">
-                <tr class="tajawal-bold">
-                    <th scope="col">رقم</th>
-                    <th scope="col">المبلغ</th>
-                    <th scope="col">التاريخ</th>
-                    <th scope="col">ملاحظات</th>
-                    <th scope="col">تفاصيل</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($transactions as $transaction)
-                    <tr style="text-align: right;">
-                        <td><span class="tajawal-bold">رقم:</span> {{$transaction->id}}</td>
-                        @if ($transaction->amount > 0)
-                            <td>
-                                <span class="badge text-bg-success" style="font-size: 85%">{{$transaction->amount}}</span>
-                                <span class="tajawal-bold">:المبلغ</span>
-                            </td>
-                        @else
-                            <td>
-                                <span class="badge text-bg-danger" style="font-size: 85%">{{$transaction->amount}}</span>
-                                <span class="tajawal-bold">:المبلغ</span>
-                            </td>
-                        @endif
-
-                        <td><span class="tajawal-bold">التاريخ:</span> {{$transaction->date}}</td>
-                        <td>
-                            @if ($transaction->note)
-                                <span class="tajawal-bold">ملاحظات:</span> {{$transaction->note}}
-                            @else
-                                <span class="tajawal-extralight">لا توجد ملاحظات</span>
-                            @endif
-                        </td>
-                        <td>
-
-                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
-                                data-bs-target="#transaction{{$transaction->id}}">
-                                تفاصيل اكثر
-                            </button>
-                            <!-- Modal -->
-                            <div class="modal fade" id="transaction{{$transaction->id}}" tabindex="-1"
-                                aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h1 class="modal-title fs-5" id="exampleModalLabel">تفاصيل عمليّة رقم
-                                                {{$transaction->id}}
-                                            </h1>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body" style="text-align: center;">
-                                            <!--price-->
-                                            <div class="mb-3">
-                                                <p>مبلغ العميّة</p>
-                                                @if ($transaction->amount > 0)
-                                                    <h5><span class="badge text-bg-success" style="font-size: 85%">ريال
-                                                            {{$transaction->amount}}</span></h5>
-                                                @else
-                                                    <h5><span class="badge text-bg-danger" style="font-size: 85%">ريال
-                                                            {{$transaction->amount}}</span></h5>
-                                                @endif
-                                            </div>
-                                            <hr>
-                                            <!--name-->
-                                            <div class="mb-3">
-                                                <p>أسم المتجر</p>
-                                                <h5>{{$transaction->store_name}}</h5>
-                                            </div>
-                                            <hr>
-                                            <div class="mb-3">
-                                                <p>تاريخ العمليّة</p>
-                                                <h5>{{$transaction->date}}</h5>
-                                            </div>
-                                            <hr>
-                                            @if ($transaction->sms_message)
-                                                <div class="mb-3">
-                                                    <p>رسالة العمليّة من البنك</p>
-                                                    <div class="answer left">
-                                                        <div class="text">
-                                                            {{$transaction->sms_message}}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <p style="font-size:1px">a</p>
-                                                <hr>
-                                            @endif
-
-                                            <div class="mb-3">
-
-                                                <p>ملاحظات</p>
-                                                @if ($transaction->note)
-                                                    <h5>{{$transaction->note}}</h5>
-                                                @else
-                                                    <p class="tajawal-extralight">لا توجد ملاحظات</p>
-                                                @endif
-                                            </div>
-                                            <hr>
-
-                                            <div class="mb-3">
-                                                <p>صورة للفاتورة</p>
-                                                @if ($transaction->image)
-                                                    <img style="width:60vw; max-width:430px" src="{{asset($transaction->image)}}"
-                                                        class="rounded mx-auto d-block">
-                                                @else
-                                                    <p class="tajawal-extralight">لا توجد صورة</p>
-                                                @endif
-                                            </div>
-                                            <hr>
-
-                                            <div class="mb-3">
-                                                <div class="container text-center">
-                                                    <div class="row align-items-start">
-                                                        <div class="col">
-                                                            <p>آخر تاريخ تعديل للعمليّة</p>
-                                                            @if ($transaction->updated_at == $transaction->created_at)
-                                                                <p class="tajawal-extralight">لم يتم التعديل على العمليّة</p>
-                                                            @else
-                                                                <p>{{$transaction->updated_at}}</p>
-                                                            @endif
-                                                        </div>
-
-                                                        <div class="col">
-                                                            <p>تاريخ ادخال العمليّة</p>
-                                                            {{$transaction->created_at}}
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer" style="text-align:center">
-                                            <button type="button" class="btn btn-secondary"
-                                                data-bs-dismiss="modal">خروج</button>
-                                            <div class="dropdown">
-                                                <!-- Default dropup button -->
-                                                <div class="btn-group dropup">
-                                                    <button type="button" class="btn btn-primary dropdown-toggle"
-                                                        data-bs-toggle="dropdown" aria-expanded="true">
-                                                        خيارات
-                                                    </button>
-                                                    <ul class="dropdown-menu" style="padding:5px">
-                                                        <!-- Dropdown menu links -->
-                                                        <li class="mb-1"> <a
-                                                                href="/transactions/{{$transaction->id}}/edit"><button
-                                                                    style="width:100%" class="btn btn-outline-primary">تعديل</button></a>
-                                                        </li>
-                                                        <li class="mb-1">
-                                                        <a
-                                                        href="/transactions/{{$transaction->id}}/delete">
-                                                            <button style="width:100%" class="btn btn-outline-danger">
-                                                            حذف
-                                                            </button>
-                                                            </a>
-                                                    </li>
-
-                                                    </ul>
-                                                </div>
-                                            </div>
-
-
-                                        </div>
-                                    </div>
+                    <div class="container text-center">
+                        <div class="row">
+                            <div class="col cell">
+                                <div style="margin: 15px;">
+                                    <p>عدد العمليّات</p>
+                                    <p>عمليّة <bdi>{{$insight->transactionsCount}}</bdi></p>
+                                </div>
+                            </div>
+                            <div class="col cell">
+                                <div style="margin: 15px;">
+                                    <p>إجمالي المبلغ</p>
+                                    @if ($insight->total >= 0)
+                                        <p class="badge text-bg-success" style="font-size: 90%">ريال <bdi>{{$insight->total}}</bdi></p>
+                                    @else
+                                        <p class="badge text-bg-danger" style="font-size: 90%">ريال <bdi>{{$insight->total}}</bdi></p>
+                                    @endif
                                 </div>
 
-                                <br><br>
-                        </td>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col cell" style="background-color:#e3ffe2">
+                                <div style="margin: 15px;">
+                                    <p><i class="fa-solid fa-chevron-down"></i> الوارد</p>
+                                    <p class="badge text-bg-success" style="font-size: 90%">ريال
+                                        <bdi>{{$insight->totalIncoming}}</bdi>
+                                    </p>
 
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
+                                </div>
+
+                            </div>
+                            <div class="col cell" style="background-color:#ffe2e2">
+                                <div style="margin: 15px;">
+                                    <p><i class="fa-solid fa-chevron-up"></i> الصادر</p>
+                                    <p class="badge text-bg-danger" style="font-size: 90%">ريال
+                                        <bdi>{{$insight->totalOutgoing}}</bdi>
+                                    </p>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+            </div>
+            <div class="carousel-item">
+            <div class="custom-card-header">
+                    <h2>📊 رسم بياني للعمليّات</h2>
+                    </div>
+
+                <canvas id="myChart"></canvas>
+            </div>
+            <div class="carousel-item">
+            <div class="custom-card-header">
+                    <h2>📊 رسم بياني للعمليّات</h2>
+                    </div>
+
+                <canvas id="myChart2"></canvas>
+            </div>
+
+          </div>
+          <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+            let transactions = {!! json_encode($transactions) !!};
+            transactions = transactions.filter(transaction => transaction.amount <= 0);
+
+
+            // Aggregate spending by date
+            const spendingByDate = {};
+
+            transactions.forEach(transaction => {
+                const date = transaction.date;
+                const amount = transaction.amount;
+
+                if (!spendingByDate[date]) {
+                    spendingByDate[date] = 0;
+                }
+                spendingByDate[date] += amount; // Sum up the spending
+            });
+
+
+
+            // Prepare labels and data arrays, sorted by date
+            const labels = Object.keys(spendingByDate).sort((a, b) => new Date(a) - new Date(b));
+            const data = labels.map(label => Math.abs(spendingByDate[label])); // Get absolute values
+
+            // Chart.js setup
+            const ctx = document.getElementById('myChart');
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'المبلغ المصروف (مستثنى الوارد)',
+                        data: data,
+                        borderWidth: 1,
+                        borderColor: 'rgb(192, 75, 75)',
+                        backgroundColor: 'rgba(192, 75, 75, 0.2)'
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        </script>
+<script>
+    let transactions2 = {!! json_encode($transactions) !!};
+    transactions2 = transactions2.filter(transaction => transaction.amount <= 0);
+
+    // Aggregate spending by store name
+    const spendingByStore = {};
+
+    transactions2.forEach(transaction => {
+        const storeName = transaction.store_name; // Get store name
+        const amount = transaction.amount;
+
+        if (!spendingByStore[storeName]) {
+            spendingByStore[storeName] = 0;
+        }
+        spendingByStore[storeName] += amount; // Sum up the spending
+    });
+
+    // Prepare labels and data arrays
+    const labels2 = Object.keys(spendingByStore); // Store names as labels
+    const data2 = labels2.map(label => Math.abs(spendingByStore[label])); // Get absolute values
+    // Chart.js setup
+    const ctx2 = document.getElementById('myChart2');
+
+    new Chart(ctx2, {
+        type: 'bar', // Changed to bar chart for better visualization of stores
+        data: {
+            labels: labels2,
+            datasets: [{
+                label: 'المبلغ المصروف حسب المتجر (مستثنى الوارد)',
+                data: data2,
+                borderWidth: 1,
+                borderColor: 'rgb(192, 75, 75)',
+                backgroundColor: 'rgba(192, 75, 75, 0.2)'
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+<style>
+                /* Custom styles for carousel controls */
+                .carousel-control-prev-icon,
+                .carousel-control-next-icon {
+                    background-color: rgba(0, 0, 0, 0.5); /* Change background color */
+                }
+
+                .carousel-control-prev {
+                    color: red; /* Change arrow color for previous */
+                }
+
+                .carousel-control-next {
+                    color: blue; /* Change arrow color for next */
+                }
+            </style>
+
+          <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
+        </div>
+
+                </div>
+
+                <br>
+                <hr>
+
+                <div class="custom-card-header">
+                    @if ($viewMode == "AllTransactions")
+                    <h2>جميع العمليّات</h2>
+                    <p>يتم عرض جميع العمليّات المدخلة</p>
+                    @elseif ($viewMode == "TransactionsThisMonth")
+                    <h2>عمليّات هذا الشهر</h2>
+                    <p>يتم عرض العمليّات من {{$dates->startDate->toDateString()}} الى {{$dates->endDate->toDateString()}}</p>
+                    @elseif ($viewMode == "TransactionsPastMonth")
+                    <h2>عمليّات الشهر الماضي</h2>
+                    <p>يتم عرض العمليّات من {{$dates->startDate->toDateString()}} الى {{$dates->endDate->toDateString()}}</p>
+
+                    @elseif ($viewMode == "filteredTransactions")
+                    <h2>بحث مخصص</h2>
+                    <p>يتم عرض نتيجة البحث باستخدام هذه خيارات البحث</p>
+                    <ul>
+                        @if ($filterOptions->searchTerm)
+                        <li><bdi>{{$filterOptions->searchTerm}}</bdi> :كلمة البحث</li>
+                        @endif
+                        @if ($filterOptions->startAmount)
+                        <li>بمبلغ من {{$filterOptions->startAmount}} الى {{$filterOptions->endAmount}}</li>
+                        @endif
+                        @if ($filterOptions->startDate)
+                        <li>من تاريخ {{$filterOptions->startDate}} الى تاريخ {{$filterOptions->endDate}}</li>
+                        @endif
+
+                    </ul>
+                    @elseif (is_numeric($viewMode))
+                    <h2>عرض عمليّات آخر {{$viewMode}} شهور</h2>
+                    <p>يتم عرض العمليّات من {{$dates->startDate->toDateString()}} الى {{$dates->endDate->toDateString()}}</p>
+
+                    @endif
+                    <form action="/transactions/export" method="post">
+                        @csrf
+                    <input type="text" hidden name="transactions" value="{{json_encode($transactions->reverse()->values())}}">
+                    <button type="submit" class="btn btn-info" style="width: 80%;"> <i class="fa-solid fa-print"></i> انشاء تقرير</button>
+                    </form>            
+                </div>
+                <hr>
+                <table class="table" role="table">
+                    <thead style="text-align: right;">
+                        <tr class="tajawal-bold">
+                            <th scope="col">رقم</th>
+                            <th scope="col">المتجر</th>
+                            <th scope="col">المبلغ</th>
+                            <th scope="col">التاريخ</th>
+                            <th scope="col">ملاحظات</th>
+                            <th scope="col">تفاصيل</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($transactions as $transaction)
+                            <tr style="text-align: right;">
+                                <td><span class="tajawal-bold">رقم:</span> {{$transaction->id}}</td>
+                                <td>
+                                    <bdo dir="rtl">
+                                        <span class="tajawal-bold">متجر:</span> {{$transaction->store_name}}
+                                    </bdo>
+                                </td>
+                                @if ($transaction->amount > 0)
+                                    <td>
+                                        <span class="badge text-bg-success" style="font-size: 85%">{{$transaction->amount}}</span>
+                                        <span class="tajawal-bold">:المبلغ</span>
+                                    </td>
+                                @else
+                                    <td>
+                                        <span class="badge text-bg-danger" style="font-size: 85%">{{$transaction->amount}}</span>
+                                        <span class="tajawal-bold">:المبلغ</span>
+                                    </td>
+                                @endif
+
+                                <td><span class="tajawal-bold">التاريخ:</span> {{$transaction->date}}</td>
+                                <td>
+                                    @if ($transaction->note)
+                                        <span class="tajawal-bold">ملاحظات:</span> {{$transaction->note}}
+                                    @else
+                                        <span class="tajawal-extralight">لا توجد ملاحظات</span>
+                                    @endif
+                                </td>
+                                <td>
+
+                                    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
+                                        data-bs-target="#transaction{{$transaction->id}}">
+                                        تفاصيل اكثر
+                                    </button>
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="transaction{{$transaction->id}}" tabindex="-1"
+                                        aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h1 class="modal-title fs-5" id="exampleModalLabel">تفاصيل عمليّة رقم
+                                                        {{$transaction->id}}
+                                                    </h1>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body" style="text-align: center;">
+                                                    <!--price-->
+                                                    <div class="mb-3">
+                                                        <p>مبلغ العميّة</p>
+                                                        @if ($transaction->amount > 0)
+                                                            <h5><span class="badge text-bg-success" style="font-size: 85%">ريال
+                                                                    {{$transaction->amount}}</span></h5>
+                                                        @else
+                                                            <h5><span class="badge text-bg-danger" style="font-size: 85%">ريال
+                                                                    {{$transaction->amount}}</span></h5>
+                                                        @endif
+                                                    </div>
+                                                    <hr>
+                                                    <!--name-->
+                                                    <div class="mb-3">
+                                                        <p>أسم المتجر</p>
+                                                        <h5>{{$transaction->store_name}}</h5>
+                                                    </div>
+                                                    <hr>
+                                                    <div class="mb-3">
+                                                        <p>تاريخ العمليّة</p>
+                                                        <h5>{{$transaction->date}}</h5>
+                                                    </div>
+                                                    <hr>
+                                                    @if ($transaction->sms_message)
+                                                        <div class="mb-3">
+                                                            <p>رسالة العمليّة من البنك</p>
+                                                            <div class="answer left">
+                                                                <div class="text">
+                                                                    {{$transaction->sms_message}}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <p style="font-size:1px">a</p>
+                                                        <hr>
+                                                    @endif
+
+                                                    <div class="mb-3">
+
+                                                        <p>ملاحظات</p>
+                                                        @if ($transaction->note)
+                                                            <h5>{{$transaction->note}}</h5>
+                                                        @else
+                                                            <p class="tajawal-extralight">لا توجد ملاحظات</p>
+                                                        @endif
+                                                    </div>
+                                                    <hr>
+
+                                                    <div class="mb-3">
+                                                        <p>صورة للفاتورة</p>
+                                                        @if ($transaction->image)
+                                                            <img style="width:60vw; max-width:430px" src="{{asset('storage/' . $transaction->image)}}"
+                                                                class="rounded mx-auto d-block">
+                                                        @else
+                                                            <p class="tajawal-extralight">لا توجد صورة</p>
+                                                        @endif
+                                                    </div>
+                                                    <hr>
+
+                                                    <div class="mb-3">
+                                                        <div class="container text-center">
+                                                            <div class="row align-items-start">
+                                                                <div class="col">
+                                                                    <p>آخر تاريخ تعديل للعمليّة</p>
+                                                                    @if ($transaction->updated_at == $transaction->created_at)
+                                                                        <p class="tajawal-extralight">لم يتم التعديل على العمليّة</p>
+                                                                    @else
+                                                                        <p>{{$transaction->updated_at}}</p>
+                                                                    @endif
+                                                                </div>
+
+                                                                <div class="col">
+                                                                    <p>تاريخ ادخال العمليّة</p>
+                                                                    {{$transaction->created_at}}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer" style="text-align:center">
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">خروج</button>
+                                                    <div class="dropdown">
+                                                        <!-- Default dropup button -->
+                                                        <div class="btn-group dropup">
+                                                            <button type="button" class="btn btn-primary dropdown-toggle"
+                                                                data-bs-toggle="dropdown" aria-expanded="true">
+                                                                خيارات
+                                                            </button>
+                                                            <ul class="dropdown-menu" style="padding:5px">
+                                                                <!-- Dropdown menu links -->
+                                                                <li class="mb-1"> <a
+                                                                        href="/transactions/{{$transaction->id}}/edit"><button
+                                                                            style="width:100%" class="btn btn-outline-primary"><i class="fa-solid fa-pencil"></i> تعديل</button></a>
+                                                                </li>
+                                                                <li class="mb-1">
+                                                                    <a href="#" onclick="confirmDelete(event, '/transactions/{{$transaction->id}}/delete')">
+                                                                        <button style="width:100%" class="btn btn-outline-danger">
+                                                                            <i class="fa-solid fa-trash-can"></i> حذف
+                                                                        </button>
+                                                                    </a>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <br><br>
+                                </td>
+
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
 
     @endif
 </div>
 </div>
+<script>
+    function confirmDelete(event, url) {
+        event.preventDefault(); // Prevent the default link action
+        if (confirm('هل أنت متأكد أنك تريد حذف هذه المعاملة؟')) {
+            window.location.href = url; // Redirect to the delete URL
+        }
+    }
+</script>
+
 <script>
     window.onload = function () {
         // Function to open the modal

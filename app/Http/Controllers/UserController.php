@@ -7,12 +7,30 @@ use App\Models\Plan;
 use App\Models\Subscription;
 use App\Models\Transaction;
 use Carbon\Carbon;
-use Gemini\Laravel\Facades\Gemini;
+use Gemini;
 use Illuminate\Http\Request;
 use stdClass;
+use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
+    public function displayTerms(){
+        $viewChoices = session('viewChoices', false);
+        return view('terms')->with('viewChoices', $viewChoices);
+    }
+    public function acceptTerms(){
+        $user = auth()->user();
+        if($user->terms_acceptance_date){
+            return redirect('/');
+        }
+        $user->terms_acceptance_date = now();
+        $user->update();
+        return redirect('/');
+    }
+    public function denyTerms(){
+        return redirect('logout');
+        
+    }
     public function showHomePage(){
         //Get the authentecated user
         $user = auth()->user();
@@ -58,6 +76,7 @@ class UserController extends Controller
         $userSubscription->save();
 
         //Pass it to the AI
+        //TODO: Enhance the prompt
         $initPrompt = "You are part of a program designed to extract and return a JSON object from a transaction SMS message. This object must contain the following fields:
         - **name**: string
         - **amount**: float (negative for outgoing transfers or purchases, positive for incoming transfers)
@@ -65,16 +84,18 @@ class UserController extends Controller
         
         Do not include the ```json``` code formatting. just the JSON object. If the input is not a valid SMS transaction or lacks any of the required fields (name, amount, or date), return the word 'false'. Ignore everything below the '**START OF SMS**' line.";
         $wholePrompt  = "$initPrompt\n**START OF SMS**\n$request->smsMessage\n**END OF SMS**";
-
-        $AIResponseText = Gemini::generativeModel('models/gemini-1.5-flash')->generateContent($wholePrompt);
-        //return $AIResponseText->text();
-        if($AIResponseText->text() == "false\n" or $AIResponseText->text() == "false"){
+        
+        $apiKey = getenv('GEMINI_API_KEY');
+        $client = Gemini::client($apiKey);
+        $AIResponse = $client->generativeModel(model: 'models/gemini-1.5-flash-001')->generateContent($wholePrompt);
+        
+        if($AIResponse->text() == "false\n" or $AIResponse->text() == "false"){
             $worthiness = $this->worthiness();
             return redirect()->back()->withErrors([
                 'smsMessage' => 'على ما يبدو ان هذي ماهي رسالة عمليّة شراء. جرب تدخّلها بشكل يدوي',
             ])->withInput()->with("worthiness", $worthiness);
         }
-        $transaction = json_decode($AIResponseText->text());
+        $transaction = json_decode($AIResponse->text());
 
         return view('confirmationTransaction')
         ->with('transaction', $transaction)
@@ -89,14 +110,14 @@ class UserController extends Controller
             'storeName' => 'required|max:255',
             'amount' => 'required|max:255',
             'date' => 'required|date_format:Y-m-d',
-            'image' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
+            'image' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:5120',
             'note' => 'nullable|max:2500'
         ]);
 
         //Do something with the image.
         if(!is_null($request->image)){
-            $imagePath = $request->file('image')->store('public/invoices');
-            $imagePath = str_replace('public/', 'storage/', $imagePath);
+            $imagePath = $request->file('image')->store('invoices', 'public');
+            //$imagePath = str_replace('public/', 'storage/', $imagePath);
             //Might change this to use it with S3 bucket
         } else {
             $imagePath = null;
@@ -123,8 +144,11 @@ class UserController extends Controller
 
         $dates = $this->getDates();
         $transactions = Transaction::where('user_id', '=', $user->id)
-        ->whereBetween('date',[$dates->startDate, $dates->endDate])
+        ->whereBetween('date',[$dates->startDate->format("Y-m-d"), $dates->endDate->format("Y-m-d")])
+        ->orderBy('date', 'desc')
         ->get();
+        $dates->startDate->addSecond();
+        $dates->endDate->addSecond();
 
         $insight = $this->getInsight($transactions);
 
@@ -143,6 +167,7 @@ class UserController extends Controller
         $user = auth()->user();
         //$transactions = Transaction::where('user_id', '=', $user->id)->get();
         $transactions = Transaction::where('user_id', '=', $user->id)
+        ->orderBy('date', 'desc')
         ->get();
         $insight = $this->getInsight($transactions);
 
@@ -177,7 +202,8 @@ class UserController extends Controller
                     
                     //Same logic for `$this->viewTransactionsThisMonth();`
                     $transactions = Transaction::where('user_id', '=', $user->id)
-                    ->whereBetween('date',[$dates->startDate, $dates->endDate])
+                    ->whereBetween('date',[$dates->startDate->format("Y-m-d"), $dates->endDate->format("Y-m-d")])
+                    ->orderBy('date', 'desc')
                     ->get();
 
                     $insight = $this->getInsight($transactions);
@@ -195,6 +221,7 @@ class UserController extends Controller
                 $startDate = $endDate->copy()->subMonths($request->viewModeMonth);
                 $transactions = Transaction::where('user_id', '=', $user->id)
                 ->whereBetween('date',[$startDate, $endDate])
+                ->orderBy('date', 'desc')
                 ->get();
 
                 $insight = $this->getInsight($transactions);
@@ -364,8 +391,15 @@ class UserController extends Controller
     public function viewProfileSettings(){
         $user = auth()->user();
         $currentSettings = Config::where("user_id", "=", $user->id)->first();
+        $currentSubscription = Subscription::where("user_id", "=", $user->id)->first();
+        $currentPlan = Plan::find($currentSubscription->plan_id)->first();
         $userData = collect($user)->merge(collect($currentSettings));
-        return view('profile')->with('userData', $userData);
+        $updated = session('updated', false);
+        return view('profile')
+        ->with('userData', $userData)
+        ->with('currentSubscription', $currentSubscription)
+        ->with('currentPlan', $currentPlan)
+        ->with('updated', $updated);
     }
 
     public function updateProfile(Request $request){
@@ -507,6 +541,121 @@ class UserController extends Controller
         return $homePageInsight;
     }
 
+    public function displayTransactionsTabular(Request $request){
+        $request->validate([
+            'transactions' => 'required|string',
+        ]);
+        $transactions = json_decode($request->transactions);
+        if(!is_array($transactions)){
+            //Something is off. User tried to manipulate the form's hidden inputs
+            return redirect('https://ar.wikipedia.org/wiki/%D9%86%D8%B8%D8%A7%D9%81%D8%A9_%D8%B4%D8%AE%D8%B5%D9%8A%D8%A9');
+        }
+        $insight = $this->getInsight($transactions);
+        return view('printTransactions')
+        ->with('transactions', $transactions)
+        ->with('insight', $insight);
+    }
+
+    public function downloadCsv(Request $request){
+        $request->validate([
+            'transactions' => 'required|string',
+        ]);
+        $transactions = json_decode($request->transactions);
+        if(!is_array($transactions)){
+            //Something is off. User tried to manipulate the form's hidden inputs
+            return redirect('https://ar.wikipedia.org/wiki/%D9%86%D8%B8%D8%A7%D9%81%D8%A9_%D8%B4%D8%AE%D8%B5%D9%8A%D8%A9');
+        }
+
+        return $this->generateTransactionsCsv($transactions);
+    }
+    public function downloadJson(Request $request){
+        $request->validate([
+            'transactions' => 'required|string',
+        ]);
+        $transactions = json_decode($request->transactions);
+        if(!is_array($transactions)){
+            //Something is off. User tried to manipulate the form's hidden inputs
+            return redirect('https://ar.wikipedia.org/wiki/%D9%86%D8%B8%D8%A7%D9%81%D8%A9_%D8%B4%D8%AE%D8%B5%D9%8A%D8%A9');
+        }
+
+        return $this->generateTransactionsJson($transactions);
+    }
+
+
+    public function generateTransactionsCsv($transactions){
+        $random = Str::random(20); //Really bad and tem solution
+        $fileName= "$random.csv";
+        $fp = fopen($fileName, "w+");
+        fwrite($fp, "\xEF\xBB\xBF");
+        fputcsv($fp, array(
+            "رقم العمليّة",
+            "اسم المتجر",
+            "المبلغ",
+            "تاريخ العمليّة",
+            "ملاحظات",
+            "صورة الفاتورة",
+            "رسالة عمليّة الشراء",
+            "تاريخ إدخال العملية"
+        ));
+        foreach($transactions as $transaction){
+            $imageUrl = "";
+            if($transaction->image){
+                $imageUrl = asset("storage/" . $transaction->image);
+            }
+            fputcsv($fp, array(
+                $transaction->id,
+                $transaction->store_name,
+                $transaction->amount,
+                $transaction->date,
+                $transaction->note,
+                $imageUrl,
+                $transaction->sms_message,
+                Carbon::parse($transaction->created_at)->format("Y-m-d-H-i-s"),
+            ));
+        }
+        fclose($fp);
+        $headers = array('Content-Type' => 'text/csv; charset=UTF-8');
+        $now = now()->format("Y-m-d-H-i-s");
+        $finalFileName = "transactions-$now.csv";
+        return response()->download($fileName, $finalFileName, $headers);
+    }
+
+    public function generateTransactionsJson($transactions){
+        // Generate a unique filename
+        $random = Str::random(20);
+        $fileName = "$random.json";
+
+        // Prepare the data for JSON
+        $data = [];
+        foreach ($transactions as $transaction) {
+            $data[] = [
+                'id' => $transaction->id,
+                'store_name' => $transaction->store_name,
+                'amount' => $transaction->amount,
+                'date' => $transaction->date,
+                'note' => $transaction->note,
+                'image' => $transaction->image ? asset("storage/" . $transaction->image) : null,
+                'sms_message' => $transaction->sms_message,
+                'created_at' => Carbon::parse($transaction->created_at)->format("Y-m-d H:i:s"),
+            ];
+        }
+
+        // Convert the data to JSON format
+        $jsonContent = json_encode($data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+
+        // Save the JSON content to a file
+        file_put_contents($fileName, $jsonContent);
+
+        // Set headers for JSON download
+        $headers = ['Content-Type' => 'application/json; charset=UTF-8'];
+        $now = now()->format("Y-m-d-H-i-s");
+        $finalFileName = "transactions-$now.json";
+
+        // Return the download response
+        return response()->download($fileName, $finalFileName, $headers);
+    }
+
+
     /**
      * Get the start and end dates for a one month for the auth user
      */ 
@@ -519,7 +668,7 @@ class UserController extends Controller
         $today = Carbon::now();
 
         $startDateString = $today->year . "-" . $today->month . "-" . $startDay;
-        $startDate = Carbon::parse($startDateString);
+        $startDate = Carbon::parse($startDateString)->addHours(3);
 
         if($today->day < $startDay){
             // new month in calender but not for the user's month cycle
@@ -539,7 +688,8 @@ class UserController extends Controller
     $total = 0;
     $totalOutgoing = 0;
     $totalIncoming = 0;
-    $transactionsCount = $transactions->count();
+    //$transactionsCount = $transactions->count();
+    $transactionsCount = count($transactions);
     for($i = 0; $i < $transactionsCount; $i++){
         $transaction = $transactions[$i];
         $total += $transaction->amount;
@@ -561,9 +711,14 @@ class UserController extends Controller
     return $insight;
     }
     public function test(){
-        $toady = Carbon::now();
-        $nextDay = $toady->copy()->endOfDay()->addSecond();
-        $remainingSeconds = round(abs($nextDay->diffInSeconds($toady)));
-        return $remainingSeconds;
+        $dates = $this->getDates();
+        return $dates;
+    }
+
+    public function displayPlans(){
+        $user = auth()->user();
+        $plans = Plan::all();
+        //return $plans;
+        return "Not implemented";
     }
 }

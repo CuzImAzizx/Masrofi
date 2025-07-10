@@ -144,7 +144,7 @@
 
 
             <div class="mb-3">
-                <button type="submit" class="btn btn-primary" style="width: 100%;">إرسال العمليّة</button>
+                <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;"><i class="fa-solid fa-plus"></i> إرسال العمليّة</button>
             </div>
         </form>
     </div>
