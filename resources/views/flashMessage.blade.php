@@ -13,7 +13,7 @@
                 </div>
                 <div class="mb-3">
                     <a href="/transactions?modal=transaction{{$insertedTransaction->id}}"><button class="btn btn-primary"
-                            style="width: 100%;">الذهاب الى تفاصيل العلميّة</button></a>
+                            style="width: 100%;">الذهاب الى تفاصيل العمليّة</button></a>
                 </div>
                 <div class="mb-3">
                     <a href="/transactions"><button type="button" class="btn btn-secondary" style="width: 100%;">عرض جميع
