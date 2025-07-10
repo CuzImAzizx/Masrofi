@@ -87,15 +87,21 @@ class UserController extends Controller
         
         $apiKey = getenv('GEMINI_API_KEY');
         $client = Gemini::client($apiKey);
-        $AIResponse = $client->generativeModel(model: 'models/gemini-1.5-flash-8b')->generateContent($wholePrompt);
-        
+        $AIResponse = $client->generativeModel(model: 'models/gemini-2.0-flash-lite')->generateContent($wholePrompt);
         if($AIResponse->text() == "false\n" or $AIResponse->text() == "false"){
             $worthiness = $this->worthiness();
             return redirect()->back()->withErrors([
                 'smsMessage' => 'على ما يبدو ان هذي ماهي رسالة عمليّة شراء. جرب تدخّلها بشكل يدوي',
             ])->withInput()->with("worthiness", $worthiness);
         }
-        $transaction = json_decode($AIResponse->text());
+
+        $jsonString = $AIResponse->text();
+        if (strpos($jsonString, '```json') === 0) {
+            $jsonString = substr($jsonString, 7, -3);
+            $jsonString = trim($jsonString);
+        }
+
+        $transaction = json_decode($jsonString);
 
         return view('confirmationTransaction')
         ->with('transaction', $transaction)

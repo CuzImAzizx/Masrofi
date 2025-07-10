@@ -80,7 +80,7 @@
             </div>
             <div class="mb-3">
                 <div class="form-label">اسم المتجر</div>
-                <input class="form-control" type="text" name="storeName" value="{{$transaction->name}}" required>
+                <input class="form-control" type="text" name="storeName" value="{{$transaction->name ?? null}}" required>
             </div>
             <div class="container text-center">
                 <div class="row">
@@ -88,20 +88,20 @@
                         <div class="mb-3">
                             <div class="form-label">المبلغ</div>
                             <input class="form-control" type="number" name="amount" id="amount"
-                                value="{{$transaction->amount}}" required>
+                                value="{{$transaction->amount ?? 0}}" required>
                         </div>
 
                     </div>
                     <div class="col">
                         <div class="mb-3">
-                            @if (intval($transaction->amount) < 0)
+                            @if (intval($transaction->amount ?? 0) < 0)
                                 <div class="form-label" id="amountLable">صادر</div>
                             @else
                                 <div class="form-label" id="amountLable">وارد</div>
                             @endif
 
                             <label class="switch">
-                                @if (intval($transaction->amount) < 0)
+                                @if (intval($transaction->amount ?? 0) < 0)
                                     <input type="checkbox" id="toggle">
                                 @else
                                     <input type="checkbox" id="toggle" checked>
@@ -118,7 +118,7 @@
             <div class="mb-3">
                 <div class="form-label">تاريخ العمليّة</div>
                 <input class="form-control" type="date" required name="date" id="date-input"
-                    value="{{$transaction->date}}">
+                    value="{{$transaction->date ?? null}}">
             </div>
             <div class="mb-3">
                 <div class="form-label">صورة للفاتورة</div>

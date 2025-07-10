@@ -35,7 +35,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         //God plan
-        $premiumPlan = Plan::create([
+        $godPlan = Plan::create([
             "name" => "God",
             "price" => 9999,
             "daily_requests" => 10000,
@@ -52,9 +52,9 @@ class DatabaseSeeder extends Seeder
         ]);
         Subscription::create([
             "user_id" => $defaultUser->id,
-            "plan_id" => $basicPlan->id,
+            "plan_id" => $godPlan->id,
             "start_date" => now(),
-            "daily_requests_left" => $basicPlan->daily_requests,
+            "daily_requests_left" => $godPlan->daily_requests,
         ]);
         Config::create([
            "user_id" => $defaultUser->id,
