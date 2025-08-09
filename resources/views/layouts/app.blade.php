@@ -19,7 +19,7 @@
 <body class="tajawal-medium">
   @if (auth()->check())
 
-    <a data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample">
+    <a data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample" class="menu-btn">
     <div style="position: absolute; top: 20px; left: 10px;">
       <i class="fa-solid fa-bars" style="color:black; font-size:xx-large"></i>
     </div>
@@ -60,9 +60,14 @@
 
   @endif
 
-  <div style="text-align:center">
+  <div class="centered-content" style="text-align:center">
+  <div class="card">
+    <div class="card-body">
+@yield('content')
 
-    @yield('content')
+    </div>
+  </div>
+    
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
