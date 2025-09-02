@@ -35,6 +35,8 @@ Masrofi is a personal expense tracking web application built with Laravel. It's 
 
 ![alt text](assets/image31.png)
 
+![alt text](assets/image4.png)
+
 ## How to use Masrofi?
 
 ### Use the online version for free
