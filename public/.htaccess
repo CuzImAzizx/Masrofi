@@ -18,4 +18,10 @@
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
+
+    # Deny access to hidden files like .env
+    <FilesMatch "^\.">
+        Require all denied
+    </FilesMatch>
+
 </IfModule>
