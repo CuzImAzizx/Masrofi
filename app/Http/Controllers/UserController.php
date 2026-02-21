@@ -87,7 +87,7 @@ class UserController extends Controller
         
         $apiKey = getenv('GEMINI_API_KEY');
         $client = Gemini::client($apiKey);
-        $AIResponse = $client->generativeModel(model: 'models/gemini-2.0-flash-lite')->generateContent($wholePrompt);
+        $AIResponse = $client->generativeModel(model: 'models/gemini-2.5-flash')->generateContent($wholePrompt);
         if($AIResponse->text() == "false\n" or $AIResponse->text() == "false"){
             $worthiness = $this->worthiness();
             return redirect()->back()->withErrors([
